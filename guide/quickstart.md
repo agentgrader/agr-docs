@@ -5,22 +5,20 @@ It is super easy to get started with Agentgrader. You can have your first benchm
 Before we jump in, make sure you have a few things ready:
 *   Node.js (v18+) or [Bun](https://bun.sh/) installed on your machine.
 *   [Docker](https://www.docker.com/) installed and currently running.
-*   An API key from either OpenRouter or OpenAI.
+*   An API key from OpenRouter, OpenAI, or Anthropic.
 
-## 1. Clone and Install
+## 1. Install Agentgrader
 
-First, grab the repository from GitHub and install all the necessary dependencies using npm or Bun.
+Install the CLI globally with npm or Bun. This puts the `agr` command directly on your `PATH` - no cloning or building required.
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/agentgrader/agr
-cd agr
+npm install -g agentgrader
+# or
+bun add -g agentgrader
+```
 
-# 2. Install all dependencies
-npm install  # or bun install
-
-# 3. Build the packages
-npm run build
+```bash
+agr --help
 ```
 
 ## 2. Set Up Your Environment
@@ -31,27 +29,38 @@ By default, Agentgrader uses OpenRouter as the gateway for Large Language Models
 export OPENROUTER_API_KEY=sk-or-...
 ```
 
-## 3. Run Your First Benchmark
-
-Now for the fun part! You can run an example benchmark that tests a baseline agent against a collection of TypeScript bugs. 
+Prefer to talk to Claude directly instead of going through OpenRouter? Set `provider: anthropic` in your agent config (see the [Agent Config reference](/reference/agent-config-yaml)) and export an `ANTHROPIC_API_KEY` - Agentgrader will call the Anthropic API directly using that key.
 
 ```bash
-just bench
+export ANTHROPIC_API_KEY=sk-ant-...
 ```
 
-If you prefer using the CLI directly, this does the exact same thing:
+## 3. Get the Example Suite
+
+The `agr` CLI itself doesn't bundle any test cases - those live in the GitHub repo. Grab a copy to try Agentgrader against the included example suite and agent configs:
+
 ```bash
-node packages/cli/dist/index.js bench \
+git clone --depth 1 https://github.com/agentgrader/agr agentgrader-examples
+cd agentgrader-examples
+```
+
+## 4. Run Your First Benchmark
+
+Now for the fun part! Run an example benchmark that tests a baseline agent against a collection of TypeScript bugs:
+
+```bash
+agr bench \
   --suite examples/suites/typescript-bugs/ \
   --configs examples/configs/baseline.yaml
 ```
 
 Sometimes you just want to focus on a single test case instead of running a full benchmark. In that case, you can simply use:
 ```bash
-just run
+agr run examples/suites/typescript-bugs/add-error-handling/agr.yaml \
+  --config examples/configs/baseline.yaml
 ```
 
-## 4. Programmatic API
+## 5. Programmatic API
 
 If you are a developer looking to integrate Agentgrader directly into your own CI/CD pipelines, tools, or custom evaluation scripts, you don't have to use the CLI. Agentgrader has a powerful programmatic API!
 

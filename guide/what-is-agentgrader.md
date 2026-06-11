@@ -1,10 +1,10 @@
 # What is Agentgrader?
 
-Welcome to **Agentgrader**. This is an open-source benchmarking framework specifically built for TypeScript and Bun/Node projects. 
+Welcome to **Agentgrader**. This is an open-source agent architecture benchmarking framework specifically built for TypeScript and Bun/Node projects. 
 
 Think of it as a testing ground for your AI coding agents. It gives you the power to run your agents against real programming tasks inside completely isolated Docker sandboxes. Once the agent is done, Agentgrader automatically scores its work and tracks important metrics like cost, token usage, and pass rates over time.
 
-The core idea is simple. You have a coding agent powered by a model like GPT-4o, Claude, or Gemini, and you want to know objectively how good it actually is. Agentgrader provides you with all the infrastructure you need to find out.
+The core idea is simple. You have a coding agent with different tools powered by a model like GPT-4o, Claude, or Gemini, and you want to know objectively how good it actually is. Agentgrader provides you with all the infrastructure you need to find out.
 
 ## Key Features
 

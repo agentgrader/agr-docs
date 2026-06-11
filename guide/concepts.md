@@ -45,11 +45,13 @@ system_prompt: |
   Call submit when all tests pass.
 ```
 
-The `model` field is incredibly flexible. You can use any model that is available through OpenRouter, such as:
+The `model` field is incredibly flexible. By default Agentgrader routes through OpenRouter, so you can use any model available there, such as:
 *   `openai/gpt-4o`
 *   `anthropic/claude-opus-4`
 *   `google/gemini-2.5-pro`
 *   `meta-llama/llama-3.1-70b-instruct`
+
+If you'd rather call a provider directly, set `provider: openai` (with an `OPENAI_API_KEY`) or `provider: anthropic` (with an `ANTHROPIC_API_KEY`) and use that provider's native model name, e.g. `provider: anthropic` with `model: claude-opus-4`.
 
 ## 3. The Sandbox
 
@@ -68,7 +70,40 @@ Once the agent calls `submit()` or the run hits the timeout limit, Agentgrader s
 
 ## 4. Scoring
 
-Agentgrader handles scoring automatically at the end of each evaluation using two main tools:
+Agentgrader handles scoring automatically at the end of each evaluation. The core blocking scorers determine `passed`/`failed`:
 
 *   **CommandScorer**: This runs every `run:` criterion as a shell command within the sandbox and validates the exit code.
 *   **AssertionScorer**: This evaluates mathematical `assert:` expressions. You have access to variables like `steps`, `cost_usd`, `tokens_in`, and `tokens_out` to create very flexible success criteria.
+*   **RegressionScorer**: For test cases with `test_command`/`fail_to_pass`/`pass_to_pass`, this re-runs the test suite and checks that the previously-failing `fail_to_pass` tests now pass and the `pass_to_pass` tests didn't regress. It also fails the run if the agent edited any `forbid_modified` paths (a tamper guard).
+*   **DiffScorer** and **LocalizationScorer**: When `solution`/`expected_files` are configured, these compare the agent's diff against the gold patch and report precision/recall/F1 on which files were touched.
+
+## 5. Quality Scorers & the Optimizer
+
+On top of the pass/fail scorers above, `agr bench` also runs **additive, non-blocking** quality scorers. These never affect `passed` - they just attach extra data to `metrics` for reporting and optimization:
+
+*   **StaticQualityScorer** (`@agentgrader/scorer-static`, always on): deterministic signals computed from the diff - lines changed, files touched, `TODO`/`FIXME` markers introduced, and Biome lint violations. Recorded under `metrics["static-quality"].quality`.
+*   **LlmJudgeScorer** (`@agentgrader/scorer-llm-judge`, opt-in via `extraScorers`): asks an LLM to rate the diff from 0-1 for correctness and code quality. Recorded under `metrics["llm-judge"].quality`.
+
+Inspect these for a single run with [`agr trace <runId> --quality`](/reference/cli#agr-trace).
+
+### Optimizer matrices
+
+To sweep many agent configurations at once - different models, temperatures, system prompts, or toolkits - define a **matrix** YAML and pass it to `agr bench --matrix`:
+
+```yaml
+# matrix.yaml
+name: model-comparison
+base:
+  max_steps: 15
+  temperature: 0.2
+dimensions:
+  model:
+    - anthropic/claude-3.5-sonnet
+    - anthropic/claude-3.5-haiku
+    - openai/gpt-4o-mini
+  temperature:
+    - 0.2
+    - 0.7
+```
+
+`agr bench --matrix matrix.yaml --suite ./examples/suites/typescript-bugs` expands every combination of `dimensions` (here, 3 models x 2 temperatures = 6 agent configs) on top of `base`, runs the full suite against each, and tags every run with a shared `matrixId`. Afterwards it prints a "MATRIX SUMMARY" table with each config's solve rate, average cost, and (if `StaticQualityScorer` ran) average lint violations, marking the Pareto-optimal configs with `*`.

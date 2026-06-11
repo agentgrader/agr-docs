@@ -10,6 +10,7 @@ This function lets you run a single test case programmatically.
 import { runSingle } from "@agentgrader/core";
 import { DockerSandboxProvider } from "@agentgrader/sandbox-docker";
 import { OpenRouterAgentAdapter } from "@agentgrader/agent-openrouter";
+import { StaticQualityScorer } from "@agentgrader/scorer-static";
 import { initDb } from "@agentgrader/store";
 import { randomUUID } from "crypto";
 
@@ -32,12 +33,15 @@ const result = await runSingle({
   sandboxProvider: new DockerSandboxProvider(),
   db: initDb(),          // This is optional. Just omit it if you want to skip saving to the database.
   runId: randomUUID(),
+  extraScorers: [new StaticQualityScorer()], // Optional, additive, non-blocking quality scorers
+  matrixId: undefined,   // Optional. Tags this run as belonging to an optimizer matrix sweep.
 });
 
 console.log(result.passed);    // This returns a boolean
 console.log(result.costUsd);   // The total cost in USD, for example 0.012
 console.log(result.stepsCount); // How many tool iterations the agent took
 console.log(result.finalDiff); // The git diff showing exactly what changed
+console.log(result.metrics);   // e.g. { "static-quality": { quality: { diffLines, filesModified, ... } } }
 ```
 
 ## `runBenchmark()`
@@ -57,5 +61,37 @@ const result = await runBenchmark({
     // This gives you streaming updates as the runs progress
     console.log(`${run.testCaseId}: ${run.status}`);
   },
+  extraScorers: [new StaticQualityScorer()], // Optional, applied to every test case x config combination
+  matrixId: undefined,   // Optional. Tags every resulting run with a shared matrix ID.
 });
+```
+
+## Optimizer Matrix Sweeps
+
+`@agentgrader/optimizer` provides the helpers behind `agr bench --matrix`. You can use them directly to expand a matrix into agent configs, then aggregate and rank the resulting runs:
+
+```typescript
+import { expandMatrix, aggregateResults, paretoFront } from "@agentgrader/optimizer";
+import { runBenchmark } from "@agentgrader/core";
+import { getRunsByMatrixId } from "@agentgrader/store";
+import { randomUUID } from "crypto";
+
+// 1. Expand a matrix definition into the cartesian product of agent configs
+const agentConfigs = expandMatrix({
+  name: "model-comparison",
+  base: { max_steps: 15, temperature: 0.2 },
+  dimensions: {
+    model: ["anthropic/claude-3.5-sonnet", "anthropic/claude-3.5-haiku", "openai/gpt-4o-mini"],
+    temperature: [0.2, 0.7],
+  },
+});
+
+// 2. Run the benchmark, tagging every run with a shared matrixId
+const matrixId = randomUUID();
+await runBenchmark({ testCases, agentConfigs, adapter, sandboxProvider, db, matrixId });
+
+// 3. Aggregate solve rate / cost / quality per agent config, then find the Pareto front
+const runs = await getRunsByMatrixId(db, matrixId);
+const aggregates = aggregateResults(runs, agentConfigs);
+const front = paretoFront(aggregates); // optimal across solveRate, avgCostUsd, and (if present) avgQuality.linterViolations
 ```

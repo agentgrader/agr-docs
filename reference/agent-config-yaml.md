@@ -5,6 +5,7 @@ The Agent Config file is where you decide exactly which model to use. It lets yo
 ```yaml
 id: baseline
 name: Baseline Agent
+provider: openrouter   # optional - "openrouter" (default), "openai", or "anthropic"
 model: gpt-4o-mini
 max_steps: 15
 temperature: 0.2

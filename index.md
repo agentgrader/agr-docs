@@ -4,7 +4,7 @@ layout: home
 hero:
   name: "Agentgrader"
   text: ""
-  tagline: The open-source benchmarking framework to test your AI agents on real coding tasks.
+  tagline: The open-source agent architecture benchmark framework to test your AI agents on real coding tasks.
   image:
     src: /LGO.svg
     alt: Agentgrader Logo
