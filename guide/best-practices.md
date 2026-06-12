@@ -233,6 +233,12 @@ Set `step_timeout_ms` (default `120000`) in `agent.yaml` - see [Agent Config: `s
 
 If you hit this with an older `agentgrader`/`@agentgrader/agent-openrouter` build that predates `step_timeout_ms`, manually `docker rm -f` the leftover container (it will be `tail -f /dev/null` with no other process running) and upgrade.
 
+### A run finished with `finished: false` but `agr trace` shows no score detail
+
+A run can end up with `finished: false` for two very different reasons that otherwise look identical: either the agent submitted a solution that failed scoring, or the agent loop itself never reached `submit` (an error or a `step_timeout_ms` abort cut it off first).
+
+Run `agr trace <runId>` and check for an `agent error:` line, which is populated from `metrics.agentError`. If present, the agent loop itself errored or was aborted (the message names `step_timeout_ms` when that was the cause), and the run never got a real chance to solve the task, no matter what the scorers say. If absent, the agent ran to completion (or `max_steps`) and the failure is a genuine scoring miss.
+
 ### `agr bench` flag errors
 
 `agr bench` requires `--suite` and either `--configs`, `--config`, or `--matrix`. If you pass `--config` to bench (singular), it works as an alias for a single `--configs` path: the same flag name as `agr run --config` but with different semantics on each command.
