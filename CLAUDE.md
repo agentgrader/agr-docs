@@ -4,6 +4,10 @@ globs: "*.ts, *.tsx, *.html, *.css, *.js, *.jsx, package.json"
 alwaysApply: false
 ---
 
+## Documentation style
+
+When editing markdown under this repo: **never use em dashes (`—`) or en dashes (`–`)** in prose. Use commas, periods, semicolons, colons, or parentheses instead.
+
 Default to using Bun instead of Node.js.
 
 - Use `bun <file>` instead of `node <file>` or `ts-node <file>`

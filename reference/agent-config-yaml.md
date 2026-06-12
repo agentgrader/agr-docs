@@ -22,8 +22,8 @@ Every agent gets four local sandbox tools by default: `executeCommand`, `readFil
 
 Beyond those defaults, you can extend what the agent can do in two ways (both configured in `agent.yaml`, and optionally duplicated per test case via `toolkits` in `agr.yaml`):
 
-- **`toolkits:`** — directories with custom CLI tools (`bin/`) and/or Agent Skills (`.claude/skills/*/SKILL.md`). Copied into the sandbox; skill names/descriptions are injected into the system prompt (full `SKILL.md` read on demand via `readFile`).
-- **`mcp_servers:`** — MCP servers (stdio or remote SSE) whose tools are merged at run time, namespaced as `<serverName>_<toolName>`.
+- **`toolkits:`** directories with custom CLI tools (`bin/`) and/or Agent Skills (`.claude/skills/*/SKILL.md`). Copied into the sandbox; skill names/descriptions are injected into the system prompt (full `SKILL.md` read on demand via `readFile`).
+- **`mcp_servers:`** MCP servers (stdio or remote SSE) whose tools are merged at run time, namespaced as `<serverName>_<toolName>`.
 
 Many setups only need the four built-in tools; use `toolkits` or `mcp_servers` when you need domain-specific commands or external integrations.
 
@@ -80,7 +80,7 @@ Allowlist of tool names the agent may call. Valid names:
 - **Local tools:** `executeCommand`, `readFile`, `writeFile`, `submit`
 - **MCP tools:** `<mcpServerName>_<toolName>` (namespace prefix = server name from `mcp_servers`)
 
-`submit` is always available, even when omitted from `tools` — Agentgrader adds it automatically (with a console warning) because a run cannot complete without it.
+`submit` is always available, even when omitted from `tools`. Agentgrader adds it automatically (with a console warning) because a run cannot complete without it.
 
 When `tools` is **not** set, all local tools plus all tools from every configured MCP server are available (default, unchanged behavior).
 
@@ -99,7 +99,7 @@ tools:
 
 **Type:** `string[]` (optional)
 
-Paths to toolkit directories containing custom CLI tools (`bin/`) and/or Agent Skills (`.claude/skills/*/SKILL.md`). At run time, toolkit files are copied into the sandbox and skill names/descriptions are appended to the system prompt (progressive disclosure — the full `SKILL.md` body is read on demand via `readFile`).
+Paths to toolkit directories containing custom CLI tools (`bin/`) and/or Agent Skills (`.claude/skills/*/SKILL.md`). At run time, toolkit files are copied into the sandbox and skill names/descriptions are appended to the system prompt (progressive disclosure: the full `SKILL.md` body is read on demand via `readFile`).
 
 Can be set in `agent.yaml` and/or per test case in `agr.yaml`; paths from both sources are merged and deduplicated.
 

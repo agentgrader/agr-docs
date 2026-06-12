@@ -67,7 +67,7 @@ system_prompt: |
 
 By default, requests route through OpenRouter (`openai/gpt-4o-mini`, `anthropic/claude-sonnet-4`, etc.). Set `provider: openai` or `provider: anthropic` to call those APIs directly with their native model names.
 
-Custom tools and MCP integrations are configured in YAML — not hardcoded in the adapter. See [Agent Config YAML](/reference/agent-config-yaml) for `toolkits`, `mcp_servers`, `tools` allowlist, and other fields.
+Custom tools and MCP integrations are configured in YAML, not hardcoded in the adapter. See [Agent Config YAML](/reference/agent-config-yaml) for `toolkits`, `mcp_servers`, `tools` allowlist, and other fields.
 
 ## The sandbox
 

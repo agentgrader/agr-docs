@@ -1,0 +1,13 @@
+---
+description: Do not use em dashes or en dashes in documentation prose.
+globs: "**/*.md"
+alwaysApply: true
+---
+
+When writing or editing documentation in this repo:
+
+- Never use em dashes (`—`, U+2014) or en dashes (`–`, U+2013) in prose.
+- Use commas, periods, semicolons, colons, or parentheses instead.
+- Hyphen-minus (`-`) is fine for compound words, flags, and YAML keys.
+
+Before finishing doc edits, search changed files for `—` and `–` and remove any matches.

@@ -113,7 +113,7 @@ success:
 timeout_seconds: 300
 ```
 
-The `agent_config` field points to your default `agent.yaml` relative to this file. With it set, `agr run` needs no `--config` flag — a good default for one test case paired with one standard agent config.
+The `agent_config` field points to your default `agent.yaml` relative to this file. With it set, `agr run` needs no `--config` flag. That is a good default for one test case paired with one standard agent config.
 
 ## 4. Run your first evaluation
 

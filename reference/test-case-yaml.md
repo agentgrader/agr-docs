@@ -95,7 +95,7 @@ Paths to toolkit directories (`bin/` custom CLI tools and/or `.claude/skills/*/S
 
 **Type:** `string` (optional)
 
-Path to an `agent.yaml` file, relative to the directory containing `agr.yaml`. When set, `agr run <agr.yaml>` uses this agent config automatically — no `--config` flag required. An explicit `--config` on the CLI always overrides `agent_config` from the YAML.
+Path to an `agent.yaml` file, relative to the directory containing `agr.yaml`. When set, `agr run <agr.yaml>` uses this agent config automatically; no `--config` flag required. An explicit `--config` on the CLI always overrides `agent_config` from the YAML.
 
 ```yaml
 name: leetcode-two-sum
