@@ -307,3 +307,20 @@ the dependent project's already-published, working versions. `db` is
 optional on `RunSingleInput` - omit it if `@agentgrader/store`'s bundled
 `better-sqlite3` has a Node/Bun ABI mismatch in that project (the run still
 works, it just won't be recorded to `.agr/db.sqlite`).
+
+**Always wrap your script's entry point in `.catch()`.** `runSingle` itself
+never throws - it catches everything internally and resolves with
+`result.error` set - but a standalone script has no equivalent guard around
+its own top-level code. If anything outside `runSingle` throws (or any
+promise anywhere goes unhandled), the process can exit immediately with
+*zero* output: no `RUN SUMMARY`, no error, just a script that silently
+stops, identical at first glance to the `step_timeout_ms` hang above but
+with no log line to tell them apart - and any sandbox container created
+before the crash is leaked (catch it with `agr cleanup`). Use:
+
+```ts
+main().catch((err) => {
+  console.error(`Fatal error: ${err?.stack || err}`);
+  process.exit(1);
+});
+```
