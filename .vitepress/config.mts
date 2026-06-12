@@ -32,6 +32,7 @@ export default withMermaid(defineConfig({
           { text: 'CLI Reference', link: '/reference/cli' },
           { text: 'Test Case (agr.yaml)', link: '/reference/test-case-yaml' },
           { text: 'Agent Config (agent.yaml)', link: '/reference/agent-config-yaml' },
+          { text: 'Bench Manifest (bench.yaml)', link: '/reference/bench-manifest-yaml' },
           { text: 'Packages Architecture', link: '/reference/packages' }
         ]
       },

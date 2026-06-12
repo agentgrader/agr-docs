@@ -43,21 +43,33 @@ Run every test case in a suite against one or more agent configs (or an optimize
 
 ```bash
 agr bench --suite test-cases/ --configs agent.yaml,agent-alt.yaml --concurrency 2
+agr bench --suite test-cases/ --configs-dir agents-configs/
+agr bench --manifest bench.yaml
 ```
 
 ### Options
 
 | Flag | Default | Description |
 |---|---|---|
-| `--suite <path>` | Required | Directory containing test case folders (each with an `agr.yaml`). |
-| `--configs <paths>` | One of `--configs` / `--config` / `--matrix` required | Comma-separated paths to agent config YAML files. |
+| `--manifest <path>` | (none) | Bench manifest YAML with `suite` and `agents` (paths/glob). Replaces `--suite` + `--configs` on the CLI. |
+| `--suite <path>` | Required without `--manifest` | Directory containing test case folders (each with an `agr.yaml`). |
+| `--configs <paths>` | One agent source required | Comma-separated paths to agent config YAML files. |
 | `--config <path>` | (none) | Alias for `--configs` when you have a single agent config file. |
+| `--configs-dir <dir>` | (none) | Load every `.yaml`/`.yml` file in the directory as an agent config. |
 | `--matrix <path>` | (none) | Optimizer matrix YAML. Expands into the cartesian product of agent configs, tags runs with a shared `matrixId`, and prints a Pareto summary. See [Core Concepts: Optimizer matrices](/guide/concepts#optimizer-matrices). |
-| `--concurrency <n>` | `2` | Number of parallel sandbox executions. |
+| `--concurrency <n>` | `2` | Number of parallel sandbox executions. Overrides manifest `concurrency` when set. |
+
+Use only **one** agent source per run: `--manifest`, `--configs`/`--config`, `--configs-dir`, or `--matrix`.
 
 ### Examples
 
 ```bash
+# Bench manifest (suite + agent glob in one file)
+agr bench --manifest bench.yaml
+
+# All agent YAMLs in a folder
+agr bench --suite test-cases/ --configs-dir agents-configs/
+
 # Single agent config (--config is an alias for --configs)
 agr bench --suite test-cases/ --config agent.yaml
 
@@ -68,8 +80,10 @@ agr bench --suite test-cases/ --configs agent.yaml,agent-openrouter.yaml
 agr bench --suite test-cases/ --matrix matrix.yaml
 
 # Higher parallelism
-agr bench --suite test-cases/ --config agent.yaml --concurrency 4
+agr bench --manifest bench.yaml --concurrency 4
 ```
+
+See [Bench Manifest YAML](/reference/bench-manifest-yaml) for the manifest file format.
 
 Every bench run is also scored by `StaticQualityScorer` (diff size, lint violations, etc.). See [Quality scorers](/guide/concepts#quality-scorers-and-the-optimizer).
 

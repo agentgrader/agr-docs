@@ -11,10 +11,11 @@ Agentgrader evaluates coding agents against **test cases** in isolated Docker sa
 | **Run** | `agr run <agr.yaml>` | One agent attempting one test case |
 | **Benchmark** | `agr bench --suite … --configs …` | Every test case in a suite × every agent config |
 | **Matrix benchmark** | `agr bench --suite … --matrix …` | Same as bench, but agent configs are generated from an optimizer matrix YAML |
+| **Manifest benchmark** | `agr bench --manifest bench.yaml` | Suite + agent file paths/glob defined in one manifest YAML |
 
 A **test case** is self-contained: an `agr.yaml` manifest and a `fixture/` directory with the starting code. You can version-control a folder per test case.
 
-An **agent config** is reusable across many test cases. Pass it to `agr run` with `--config` or to `agr bench` with `--configs` (comma-separated) or `--config` (single file alias).
+An **agent config** is reusable across many test cases. Pass it to `agr run` with `--config`, to `agr bench` with `--configs` / `--configs-dir`, or list paths/globs in a [bench manifest](/reference/bench-manifest-yaml).
 
 A **run** executes exactly one test case with one agent config. Results are written to the local database (see [Persistence](#persistence) below).
 
@@ -122,6 +123,37 @@ agr bench --matrix matrix.yaml --suite ./test-cases
 ```
 
 This expands every combination of `dimensions` on top of `base`, runs the full suite against each config, tags runs with a shared `matrixId`, and prints a Pareto-marked summary table.
+
+### Organizing agent configs
+
+For several distinct agent architectures (different models, prompts, toolkits), use **one YAML file per agent** instead of stuffing everything into a matrix or a single config:
+
+```
+my-benchmark/
+  bench.yaml              # optional: suite + agents glob in one file
+  agents-configs/
+    claude-debugger.yaml
+    gpt-fast.yaml
+  test-cases/
+    ...
+```
+
+Three ways to load them for `agr bench`:
+
+```bash
+# 1. Bench manifest (suite + agents in one file)
+agr bench --manifest bench.yaml
+
+# 2. Agent directory (suite on the CLI)
+agr bench --suite test-cases/ --configs-dir agents-configs/
+
+# 3. Explicit comma-separated list
+agr bench --suite test-cases/ --configs agents-configs/a.yaml,agents-configs/b.yaml
+```
+
+Use `--matrix` when you want a **cartesian product** of hyperparameters (model × temperature × prompt). Use manifest/`--configs-dir` when each agent is a **fully defined architecture** in its own file.
+
+See [Bench Manifest YAML](/reference/bench-manifest-yaml) for the manifest schema.
 
 ## Persistence
 
