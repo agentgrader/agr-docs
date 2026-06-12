@@ -211,3 +211,22 @@ agr compare <runIdA> <runIdB> --only-diff
 # Full content for divergent steps
 agr compare <runIdA> <runIdB> --only-diff --full
 ```
+
+## `agr cleanup`
+
+Lists (or, with `--yes`, removes) leftover sandbox containers from runs whose process exited or was killed before the `cleanup` workflow step could call `destroy()` - for example a hung provider request that an external `timeout` had to kill. These show up as containers running `tail -f /dev/null`, labeled `agentgrader.sandbox=true` by `DockerSandboxProvider`.
+
+```bash
+agr cleanup
+agr cleanup --yes
+```
+
+### Options
+
+| Flag | Default | Description |
+|---|---|---|
+| `--yes` | `false` | Actually remove the listed containers. Without it, `agr cleanup` only lists what would be removed. |
+
+Set `step_timeout_ms` in `agent.yaml` (see [Agent Config: `step_timeout_ms`](/reference/agent-config-yaml#step-timeout-ms)) to prevent new leftovers in the first place - `agr cleanup` is for sweeping up containers from runs that predate that fix, or from any other interrupted run.
+
+Containers created before this label was added (older `@agentgrader/sandbox-docker` versions) won't be found by `agr cleanup`; remove those manually with `docker ps -a` / `docker rm -f`.
