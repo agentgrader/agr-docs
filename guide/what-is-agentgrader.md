@@ -16,7 +16,7 @@ The core idea: you have a coding agent (GPT-4o, Claude, Gemini, or your own impl
 - **Real execution:** Agents run commands and edit files in a Docker container. No mocks.
 - **Automated scoring:** Pass and fail are determined by running real test suites (`npm test`, `pytest`, etc.) and optional per-test regression checks.
 - **Budget tracking:** Every run records tokens consumed and USD cost per model.
-- **Pluggable adapters:** Swap the LLM adapter, sandbox provider, or scorers without changing core logic.
+- **Pluggable adapters:** Swap the LLM adapter (`ai-sdk`), an external ACP agent (`acp`), sandbox provider, or scorers without changing core logic.
 - **Node and Bun:** Runs on Node.js 18+ or [Bun](https://bun.sh/). Results persist in a local SQLite database.
 
 ## Architecture overview
@@ -27,6 +27,7 @@ graph TD
     B[Test Case] --> C
     C -->|Spawns| D[Docker Sandbox]
     C -->|Calls LLM| E[OpenRouter / OpenAI / Anthropic]
+    C -->|ACP stdio| H[External ACP Agent]
     D -->|Executes| F[Test Scorer]
     C --> G[(.agr/db.sqlite)]
     F --> C

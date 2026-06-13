@@ -29,7 +29,7 @@ features:
   - title: Cost and Token Tracking
     details: Keep a close eye on your budget. Every run automatically tracks the exact tokens consumed and the total cost in USD per model.
   - title: Programmatic API First
-    details: The core framework is fully decoupled from the CLI. Build your own testing infrastructure, plug in custom Agent Adapters, or orchestrate distributed evaluations programmatically using Node.js or Bun.
+    details: The core framework is fully decoupled from the CLI. Build your own testing infrastructure, plug in custom Agent Adapters (AI SDK, ACP, or your own), or orchestrate distributed evaluations programmatically using Node.js or Bun.
   - title: Node & Bun Support
     details: It is designed to be incredibly flexible and fast. The framework runs on standard Node.js or Bun, utilizing better-sqlite3 for a lightning fast local database experience.
 ---

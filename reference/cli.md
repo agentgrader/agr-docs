@@ -73,6 +73,7 @@ Exit codes are unchanged: `0` once the run completes (regardless of `PASSED`/`FA
 |---|---|---|
 | `<testCase>` | Required | Path to an `agr.yaml` file. |
 | `--config <path>` | Built-in default | Path to an agent config YAML. If omitted, uses `gpt-4o-mini` with `max_steps: 20`. |
+| `--adapter <name>` | `ai-sdk` | Agent adapter: `ai-sdk` (default AI SDK loop) or `acp` (external ACP agent). See [ACP Agent Adapter](/advanced/acp-agent). |
 | `--verbose` | `false` | Show full per-step detail (tool name + content preview) in the live step list, instead of the compact step/cost counter. |
 
 ### Examples
@@ -86,6 +87,9 @@ agr run test-cases/fix-greeting/agr.yaml --config agent.yaml
 
 # Watch tool calls and messages in real time
 agr run test-cases/fix-greeting/agr.yaml --config agent.yaml --verbose
+
+# External ACP agent (Claude Code, Cursor Agent, ...)
+agr run test-cases/fix-greeting/agr.yaml --config agent-acp.yaml --adapter acp
 ```
 
 ## `agr bench`
@@ -108,6 +112,7 @@ agr bench --manifest bench.yaml
 | `--config <path>` | (none) | Alias for `--configs` when you have a single agent config file. |
 | `--configs-dir <dir>` | (none) | Load every `.yaml`/`.yml` file in the directory as an agent config. |
 | `--matrix <path>` | (none) | Optimizer matrix YAML. Expands into the cartesian product of agent configs, tags runs with a shared `matrixId`, and prints a Pareto summary. See [Core Concepts: Optimizer matrices](/guide/concepts#optimizer-matrices). |
+| `--adapters <names>` | `ai-sdk` | Comma-separated adapter names (`ai-sdk`, `acp`). Runs the full config matrix once per adapter. |
 | `--concurrency <n>` | `2` | Number of parallel sandbox executions. Overrides manifest `concurrency` when set. |
 
 Use only **one** agent source per run: `--manifest`, `--configs`/`--config`, `--configs-dir`, or `--matrix`.
@@ -126,6 +131,12 @@ agr bench --suite test-cases/ --config agent.yaml
 
 # Multiple agent configs
 agr bench --suite test-cases/ --configs agent.yaml,agent-openrouter.yaml
+
+# ACP agent adapter
+agr bench --suite test-cases/ --configs agent-acp.yaml --adapters acp
+
+# Compare AI SDK loop vs ACP agent
+agr bench --suite test-cases/ --configs agent.yaml,agent-acp.yaml --adapters ai-sdk,acp
 
 # Optimizer matrix sweep
 agr bench --suite test-cases/ --matrix matrix.yaml

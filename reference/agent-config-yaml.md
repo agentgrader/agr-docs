@@ -162,6 +162,46 @@ escalate_model: claude-sonnet-4-6
 
 Both fields must be set for escalation to take effect; `escalate_model` is resolved through the same `provider` auto-detection as `model`, so it can be on a different provider (e.g. escalate from an OpenRouter model to a native Anthropic one) as long as the corresponding API key is available. The switch happens at most once per run and is logged to stderr as `[escalate] step N >= escalate_after_steps (...) - switching to ...`.
 
+## ACP agent fields
+
+Use these fields with `@agentgrader/agent-acp` and `--adapter acp`. They configure an external ACP-compatible agent subprocess (Claude Code, Cursor Agent, etc.) instead of the built-in AI SDK loop. See [ACP Agent Adapter](/advanced/acp-agent) for architecture and CLI examples.
+
+### `acp_command`
+
+**Type:** `string` (optional)
+
+Executable for the ACP agent. Required when using `--adapter acp`. Examples: `claude`, `cursor-agent`. If `acp_args` is omitted, the string is split on whitespace (`cursor-agent acp` becomes command `cursor-agent` with arg `acp`).
+
+### `acp_args`
+
+**Type:** `string[]` (optional)
+
+Arguments passed to `acp_command`, for example `["--acp"]` or `["acp"]`.
+
+### `acp_cwd`
+
+**Type:** `string` (optional, default: `/app`)
+
+Working directory sent to `session/new`. Should match the sandbox root (`/app` for the default Docker provider).
+
+### `acp_env`
+
+**Type:** `record<string, string>` (optional)
+
+Extra environment variables for the spawned ACP subprocess (API keys the agent binary expects, etc.).
+
+```yaml
+name: Claude Code (ACP)
+model: acp
+step_timeout_ms: 300000
+acp_command: claude
+acp_args:
+  - --acp
+acp_cwd: /app
+```
+
+When using the ACP adapter, `provider`, `temperature`, `system_prompt`, `tools`, and `mcp_servers` in this file are ignored; the external agent brings its own model and tooling. `step_timeout_ms` still applies to the prompt turn.
+
 ## Example: toolkits, MCP, and allowlist combined
 
 ```yaml

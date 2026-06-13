@@ -2,6 +2,8 @@
 
 Agentgrader is designed to be highly flexible. It allows you to bring your very own agent implementation into the framework. Whether you want to test a JetBrains AI Assistant, a local Ollama model, or proprietary agents, you can do it by writing a Custom Agent Adapter.
 
+For [ACP-compatible agents](https://agentclientprotocol.com/) (Claude Code, Cursor Agent, Gemini CLI, and others), use the built-in [`AcpAgentAdapter`](/advanced/acp-agent) from `@agentgrader/agent-acp` instead of rolling your own.
+
 All you need to do is implement the `AgentAdapter` interface.
 
 ## Implementation Example

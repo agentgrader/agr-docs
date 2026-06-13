@@ -180,6 +180,18 @@ Every run shares a `matrixId`. After the benchmark, a **MATRIX SUMMARY** table s
 
 For programmatic access to matrix results, see [Programmatic API: Optimizer Matrix Sweeps](/advanced/programmatic-api#optimizer-matrix-sweeps).
 
+## Benchmarking ACP agents
+
+To evaluate Claude Code, Cursor Agent, or another [ACP](https://agentclientprotocol.com/) binary instead of the built-in AI SDK loop:
+
+1. Install the agent CLI and ensure it supports ACP mode (for example `claude --acp` or `cursor-agent acp`).
+2. Add `acp_command` / `acp_args` to your agent config (see `examples/configs/agent-acp-claude.yaml` in the main repo).
+3. Pass `--adapter acp` to `agr run`, or `--adapters acp` (or `ai-sdk,acp` for side-by-side comparison) to `agr bench`.
+
+The ACP subprocess runs on the host; file and terminal tools still execute inside the Docker sandbox. Raise `step_timeout_ms` for long-running ACP turns (five minutes is a reasonable starting point for complex tasks).
+
+Full details: [ACP Agent Adapter](/advanced/acp-agent).
+
 ## Troubleshooting
 
 ### Docker is not reachable

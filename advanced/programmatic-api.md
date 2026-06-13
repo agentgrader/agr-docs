@@ -3,7 +3,7 @@
 Embed Agentgrader in CI pipelines, custom tools, or evaluation scripts using the TypeScript packages published on npm.
 
 ```bash
-bun add @agentgrader/core @agentgrader/sandbox-docker @agentgrader/agent-openrouter @agentgrader/store
+bun add @agentgrader/core @agentgrader/sandbox-docker @agentgrader/agent-openrouter @agentgrader/agent-acp @agentgrader/store
 ```
 
 ## `runSingle()`
@@ -49,7 +49,27 @@ console.log(result.finalDiff);
 console.log(result.metrics);
 ```
 
-`AiSdkAgentAdapter` is the current adapter class. `OpenRouterAgentAdapter` remains available as a backwards-compatible alias from `@agentgrader/agent-openrouter`.
+`AiSdkAgentAdapter` is the default adapter class. `OpenRouterAgentAdapter` remains available as a backwards-compatible alias from `@agentgrader/agent-openrouter`.
+
+To benchmark an external ACP agent instead:
+
+```typescript
+import { AcpAgentAdapter } from "@agentgrader/agent-acp";
+
+const result = await runSingle({
+  // ...
+  agentConfig: {
+    name: "claude-acp",
+    model: "acp",
+    max_steps: 30,
+    acp_command: "claude",
+    acp_args: ["--acp"],
+  },
+  adapter: new AcpAgentAdapter(),
+});
+```
+
+See [ACP Agent Adapter](/advanced/acp-agent) for config fields and cross-adapter bench setups.
 
 `db` is optional: omit it to skip persisting to `.agr/db.sqlite`. `onStep` is optional: called for every agent step (tool calls, messages) for live progress reporting.
 
@@ -64,6 +84,8 @@ const result = await runBenchmark({
   testCases: [...],
   agentConfigs: [...],
   adapter: new AiSdkAgentAdapter(),
+  // or compare adapters:
+  // adapters: [new AiSdkAgentAdapter(), new AcpAgentAdapter()],
   sandboxProvider: new DockerSandboxProvider(),
   concurrency: 3,
   onRunUpdate: (run) => {

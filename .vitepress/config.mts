@@ -40,6 +40,7 @@ export default withMermaid(defineConfig({
         text: 'Developer API & Advanced',
         items: [
           { text: 'Programmatic API', link: '/advanced/programmatic-api' },
+          { text: 'ACP Agent Adapter', link: '/advanced/acp-agent' },
           { text: 'Custom Agent Adapter', link: '/advanced/custom-adapter' },
           { text: 'Custom Sandbox Provider', link: '/advanced/custom-sandbox' },
           { text: 'CI Integration', link: '/advanced/ci-integration' }

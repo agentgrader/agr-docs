@@ -9,6 +9,7 @@ graph TD
     Store["@agentgrader/store"] --> Core["@agentgrader/core"]
     Core --> SandboxDocker["@agentgrader/sandbox-docker"]
     Core --> AgentOpenRouter["@agentgrader/agent-openrouter"]
+    Core --> AgentAcp["@agentgrader/agent-acp"]
     Core --> ScorerStatic["@agentgrader/scorer-static"]
     Core --> ScorerLlmJudge["@agentgrader/scorer-llm-judge"]
     Core --> Optimizer["@agentgrader/optimizer"]
@@ -16,6 +17,7 @@ graph TD
     Store --> CLI
     SandboxDocker --> CLI
     AgentOpenRouter --> CLI
+    AgentAcp --> CLI
     ScorerStatic --> CLI
     ScorerLlmJudge --> CLI
     Optimizer --> CLI
@@ -32,6 +34,7 @@ Current versions on npm (check `npm view <package> version` for the latest):
 | [`@agentgrader/store`](https://www.npmjs.com/package/@agentgrader/store) | SQLite persistence (runs, traces, baselines) via Drizzle ORM. |
 | [`@agentgrader/sandbox-docker`](https://www.npmjs.com/package/@agentgrader/sandbox-docker) | Default Docker sandbox provider. |
 | [`@agentgrader/agent-openrouter`](https://www.npmjs.com/package/@agentgrader/agent-openrouter) | Default agent adapter (OpenRouter, OpenAI, Anthropic via AI SDK). |
+| [`@agentgrader/agent-acp`](https://www.npmjs.com/package/@agentgrader/agent-acp) | ACP client adapter for external agents (Claude Code, Cursor Agent, etc.) over stdio. |
 | [`@agentgrader/scorer-static`](https://www.npmjs.com/package/@agentgrader/scorer-static) | Additive quality scorer: diff size, lint, TODO markers. |
 | [`@agentgrader/scorer-llm-judge`](https://www.npmjs.com/package/@agentgrader/scorer-llm-judge) | Additive LLM judge scorer (opt-in). |
 | [`@agentgrader/optimizer`](https://www.npmjs.com/package/@agentgrader/optimizer) | Matrix expansion, aggregation, and Pareto front helpers for `agr bench --matrix`. |
@@ -47,7 +50,7 @@ npm install -g agentgrader
 **Programmatic integration** (custom pipelines, CI tools):
 
 ```bash
-bun add @agentgrader/core @agentgrader/sandbox-docker @agentgrader/agent-openrouter @agentgrader/store
+bun add @agentgrader/core @agentgrader/sandbox-docker @agentgrader/agent-openrouter @agentgrader/agent-acp @agentgrader/store
 ```
 
 See [Programmatic API](/advanced/programmatic-api) for usage examples.
@@ -69,6 +72,10 @@ Default sandbox provider using local Docker containers. Manages container lifecy
 ### `@agentgrader/agent-openrouter`
 
 Default agent adapter. Routes to OpenRouter, OpenAI, or Anthropic based on `provider` in the agent config. Exports `AiSdkAgentAdapter` (with `OpenRouterAgentAdapter` as a backwards-compatible alias).
+
+### `@agentgrader/agent-acp`
+
+ACP client adapter. Spawns an ACP-compatible agent subprocess, negotiates over stdio with `@agentclientprotocol/sdk`, and routes filesystem/terminal tool calls into the sandbox. Exports `AcpAgentAdapter`. Select with `--adapter acp` or pass to `runBenchmark({ adapters: [...] })`. See [ACP Agent Adapter](/advanced/acp-agent).
 
 ### `@agentgrader/scorer-static`
 
