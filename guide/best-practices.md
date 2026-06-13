@@ -126,6 +126,17 @@ Use `--verbose` during `agr run` to watch tool calls live. Check `metrics["stati
 
 To reset history, delete `.agr/db.sqlite`. Test case folders on disk are never modified; only the sandbox copy inside Docker changes.
 
+### Measuring toolkit adoption
+
+`agr trace <runId> --tools` and the `agr bench` `TOOL USAGE BY CONFIG`
+footer break down `executeCommand` (AI SDK adapter) and `terminal/create`
+(ACP adapter) calls by the *first word of the command*, e.g.
+`executeCommand:find-usages` or `terminal/create:pytest`, instead of one
+opaque `executeCommand`/`terminal/create` total. This makes it possible to
+see, at a glance, whether a custom `toolkits` CLI tool (vs. generic shell
+exploration like `find`/`grep`/`cd`) is actually being used, and to compare
+adoption across a `--matrix` of `toolkits` dimensions.
+
 ## CI recommendations
 
 - Install with `npm install -g agentgrader` or `bun add -g agentgrader` on the runner.

@@ -99,6 +99,24 @@ agr bench \
   --adapters ai-sdk,acp
 ```
 
+## Using `toolkits` with ACP agents
+
+`toolkits:` (on the agent config or the test case) work the same way for
+ACP agents as for the built-in AI SDK loop: the sandbox is set up *before*
+either adapter runs, so a toolkit's `bin/` scripts are already on `PATH` and
+its `.claude/skills/*/SKILL.md` files are already in `/app/.claude/skills/`
+by the time the ACP agent's prompt turn starts.
+
+This means an ACP agent (Claude Code, Cursor Agent, ...) can invoke a custom
+toolkit command - e.g. a JetBrains-style `find-usages`/`view-structure`
+script - via `terminal/create`, exactly as it would invoke `pytest` or
+`git`. Whether it *chooses* to depends on the agent's own system prompt and
+tool-selection behavior, which agentgrader does not control for ACP agents
+(unlike `agent.yaml`'s `system_prompt`, which only applies to the AI SDK
+adapter). Use `agr trace <runId> --tools` to check adoption either way -
+`executeCommand`-equivalent terminal calls are bucketed by command name the
+same as for the AI SDK adapter.
+
 ## Programmatic API
 
 ```typescript
