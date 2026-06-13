@@ -171,6 +171,23 @@ Full GitHub Actions example: [CI Integration](/advanced/ci-integration).
 - Pull base images ahead of large benches to avoid cold-start timeouts.
 - Increase `timeout_seconds` for tasks that compile heavy dependencies on first run.
 
+### Validate a SWE-bench fixture's `success:` command before trusting FAIL
+
+A `FAIL` on a SWE-bench style task can mean the agent's patch is wrong, or it can
+mean the fixture's own `success:` command never passes even on the *unmodified*
+fixture (a broken dependency pin, an unpinned transitive build dependency, a
+flaky registry timeout). Before treating repeated `FAIL` results on a given
+fixture as an agent-quality signal, run the `success:` command once against the
+unmodified fixture (e.g. in a throwaway Docker container) to confirm it can pass
+at all. A common culprit for Python fixtures: `pip install -e ".[test]"` without
+`--no-build-isolation` builds in an isolated venv populated from
+`pyproject.toml`'s `[build-system] requires`, so a version pin applied only to
+the outer `pip install` (e.g. `pip install "setuptools<60"`) does not protect the
+isolated build env, which can resolve a newer, incompatible build tool. If the
+`success:` command fails this way, fix it once (e.g. add the same pin to
+`[build-system] requires`) and re-validate before spending bench budget on that
+fixture again.
+
 ## Next steps
 
 - [Quickstart](/guide/quickstart): minimal end-to-end walkthrough
