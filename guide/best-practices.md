@@ -294,6 +294,41 @@ depends on the *published* `agentgrader` CLI - without an npm publish:
 2. `bun link @agentgrader/<package>` in the other project. This points the
    *top-level* `node_modules/@agentgrader/<package>` at your local build.
 
+**Linking multiple crucible packages at once?** Don't repeat step 2 for
+each one. Every `bun link @agentgrader/<package>` invocation in the other
+project triggers a reinstall that silently reverts every other
+previously-linked `@agentgrader/*` package back to its registry-published
+version, overwriting the symlink with a real `node_modules` copy of the
+old code. Re-linking the next package "fixes" that one and breaks the
+previous one again (whack-a-mole), and the package still resolves, so a
+verification run can pass while actually exercising stale code.
+
+For two or more packages (e.g. `core` + `sandbox-docker` +
+`agent-openrouter`), skip `bun link` for this step entirely:
+
+```bash
+cd /path/to/crucible && bun run build   # build all packages once
+cd /path/to/other-project/node_modules/@agentgrader
+rm -rf core sandbox-docker agent-openrouter
+ln -sfn /path/to/crucible/packages/core core
+ln -sfn /path/to/crucible/packages/sandbox-docker sandbox-docker
+ln -sfn /path/to/crucible/packages/agent-openrouter agent-openrouter
+```
+
+Do this in one batch and make no further `bun link` calls afterward.
+Verify each link actually points at your local build, e.g. `cat
+node_modules/@agentgrader/<package>/package.json | grep version` should
+match crucible's `package.json`, not an older published version, and
+`grep -c "<a-string-only-in-your-new-code>"
+node_modules/@agentgrader/<package>/dist/index.js` should be non-zero.
+
+Also watch for a self-referential symlink: running `bun link
+@agentgrader/<package>` from *inside* that package's own crucible
+directory (instead of from the other project) creates
+`node_modules/@agentgrader/<package> -> ../..`, pointing at itself. Fix
+with `rm -f node_modules/@agentgrader/<package>` and re-link from the
+correct directory.
+
 **Caveat**: the published `agentgrader` CLI package ships with its own
 `node_modules/agentgrader/node_modules/@agentgrader/<package>` (normal
 package-manager dependency isolation). Node/Bun module resolution prefers
