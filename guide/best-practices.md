@@ -231,6 +231,33 @@ not short-circuit on the new verdict line. This gets the redundant tool's
 information to the agent for free, on the call it was already going to make,
 without adding a competing step to the workflow.
 
+### A/B testing a `toolkits` dimension with `--matrix`
+
+When a `--matrix` varies `dimensions.toolkits` (e.g. `[[], ["./toolkits/my-tools"]]`)
+but `base.system_prompt` is shared across both arms, the no-toolkit arm's
+agent is still *told about* tools it doesn't have. It will try to call them
+anyway, hit `command not found` (exit 127), then fall back to manual
+`readFile`/`writeFile`/`executeCommand`. This adds at least one wasted
+step/reasoning turn to the baseline - the toolkit arm's measured cost and
+step-count advantage is therefore partly "has the tool" vs. "was told about
+a tool it doesn't have", not purely "has the tool" vs. "never heard of it".
+
+Mitigate the wasted-step part (without a full per-dimension system prompt,
+which `--matrix` doesn't support) by adding a short fallback note after the
+tool list in `base.system_prompt`:
+
+```
+Note: in some sandboxes the tools above are not installed. If running one
+of them fails with "command not found", don't retry it - immediately fall
+back to `executeCommand`/`readFile`/`writeFile` to do that step manually
+and continue with the rest of the workflow below.
+```
+
+This lets the no-toolkit arm recognize `exit 127` and move straight to a
+manual edit instead of spending a turn re-deciding to do so, tightening the
+A/B comparison toward "has the tool" vs. "doesn't have it" rather than
+"doesn't have it and is confused about why".
+
 ### Toolkit setup hooks (`setup.sh`)
 
 A persistent `run-tests`-MISSING result (consistent since the metric was
