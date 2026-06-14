@@ -164,6 +164,14 @@ verification to the agent), the wrapped tool still counts as "used" for
 invisible to the adoption check, since the agent never invoked the wrapped
 command itself.
 
+For optional toolkit tools that aren't ready (or aren't meant) to be
+required, set [`track_tools`](/reference/agent-config-yaml#track-tools)
+instead. It uses the same detection as `require_tools_before_submit`, but
+only annotates `metrics["tool-usage"]` with a used/unused breakdown - it
+never affects `metrics["tool-adoption"]` or pass/fail. This is useful for
+watching a newly added tool's adoption rate across many runs before deciding
+whether it earns a spot in `require_tools_before_submit`.
+
 ### Scaffolding new toolkit tools
 
 Run `agr toolkit-add <name> [--dir <toolkitDir>]` to generate a `bin/<name>`

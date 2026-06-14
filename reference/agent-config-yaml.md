@@ -136,6 +136,23 @@ require_tools_before_submit:
   - inspect-code
 ```
 
+### `track_tools`
+
+**Type:** `string[]` (optional)
+
+Like `require_tools_before_submit`, but purely informational: command names to check for usage without affecting `metrics["tool-adoption"]` or `passed`/`score`. Annotates `metrics["tool-usage"]` with `{ tracked, used, unused, detail }`, surfaced by `agr trace --quality` as a "Tool usage (track_tools)" section.
+
+Useful for watching adoption of optional toolkit tools (ones you don't want to require yet) across many runs before deciding whether to promote them to `require_tools_before_submit`.
+
+```yaml
+toolkits:
+  - ../toolkits/jetbrains-tools
+track_tools:
+  - find-usages
+  - show-call-hierarchy
+  - rename-symbol
+```
+
 ### `mcp_servers`
 
 **Type:** `record<string, McpServerConfig>` (optional)
