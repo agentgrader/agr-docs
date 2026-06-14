@@ -198,6 +198,22 @@ additional mode/flag on the existing tool (the existing tool then surfaces
 both answers in one call) rather than a separate command competing for the
 same moment in the workflow.
 
+**Confirmed fix: fold the redundant tool's output into the adopted tool's
+output.** A "can I delete X?" tool (`safe-delete`) and a "where is X used?"
+tool (`find-usages`) were tested side by side on two different fixtures - a
+single-file zero-usage case and a multi-file case with several call sites
+per symbol. Both runs adopted only `find-usages` (3/3 calls including the
+to-be-deleted symbol) and never called `safe-delete` (0/3), independent of
+usage-pattern complexity or prompt ordering. Rather than removing the
+redundant tool outright, its check was merged directly into the adopted
+tool's output: `find-usages` now appends a one-line "no usages outside its
+own definition - likely safe to delete" verdict whenever a symbol's only
+match is its own declaration. A follow-up regression run confirmed the
+agent still adopted `find-usages`, still removed the dead function, and did
+not short-circuit on the new verdict line. This gets the redundant tool's
+information to the agent for free, on the call it was already going to make,
+without adding a competing step to the workflow.
+
 ## CI recommendations
 
 - Install with `npm install -g agentgrader` or `bun add -g agentgrader` on the runner.
