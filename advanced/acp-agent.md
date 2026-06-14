@@ -107,6 +107,12 @@ either adapter runs, so a toolkit's `bin/` scripts are already on `PATH` and
 its `.claude/skills/*/SKILL.md` files are already in `/app/.claude/skills/`
 by the time the ACP agent's prompt turn starts.
 
+If a toolkit ships a `setup.sh` at its root, it also runs once during this
+same sandbox-setup phase, before either adapter's prompt turn starts - use
+it to install dependencies the toolkit's scripts (or the agent's own ad-hoc
+commands) need, e.g. `pip install pytest` on a bare `python:3.11` image. See
+[Best Practices](/guide/best-practices#toolkit-setup-hooks-setup-sh).
+
 This means an ACP agent (Claude Code, Cursor Agent, ...) can invoke a custom
 toolkit command - e.g. a JetBrains-style `find-usages`/`view-structure`
 script - via `terminal/create`, exactly as it would invoke `pytest` or

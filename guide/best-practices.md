@@ -214,6 +214,37 @@ not short-circuit on the new verdict line. This gets the redundant tool's
 information to the agent for free, on the call it was already going to make,
 without adding a competing step to the workflow.
 
+### Toolkit setup hooks (`setup.sh`)
+
+A persistent `run-tests`-MISSING result (consistent since the metric was
+introduced) turned out not to be a prompt or adoption problem at all: the
+fixtures used a bare `python:3.11` image, which doesn't ship `pytest`. Both
+the toolkit's `run-tests` wrapper *and* the agent's own first-choice
+`python -m pytest` failed identically with `No module named pytest` - the
+agent then abandoned pytest entirely and fell back to ad-hoc `python -c`
+assertions, which still let the task pass but meant no test runner (custom
+or standard) was ever successfully invoked.
+
+A toolkit can now ship a `setup.sh` at its root, executed once when the
+toolkit is injected into the sandbox (before the agent's prompt turn
+starts) - see [ACP Agent Adapter](/advanced/acp-agent#using-toolkits-with-acp-agents).
+`toolkits/jetbrains-tools/setup.sh` runs `pip install -q pytest` if missing.
+After this fix, the agent's own `python -m pytest test_x.py` succeeded on
+the first try - fewer steps, lower cost, no failed-command detour.
+
+`run-tests` itself was also given a defense-in-depth self-install (the same
+`pip install pytest`-if-missing check), so it works correctly even without
+the toolkit's `setup.sh` having run.
+
+Note this did **not** flip `run-tests` from MISSING to adopted: once
+`python -m pytest <file>` works, it satisfies the agent's verification need
+on these small, single-test-file fixtures just as well as `run-tests` would
+- the same "redundant tool" dynamic as above, except the competing tool here
+is a standard command agentgrader can't extend with a verdict line. Treat
+`run-tests` adoption as most useful as a signal on larger repos with many
+test files, where finding *which* test file to run has real value over a
+blind `pytest`.
+
 ## CI recommendations
 
 - Install with `npm install -g agentgrader` or `bun add -g agentgrader` on the runner.
