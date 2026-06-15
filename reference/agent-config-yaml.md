@@ -124,7 +124,7 @@ toolkits:
 
 **Type:** `string[]` (optional)
 
-Command names (e.g. a toolkit's `run-tests` or `inspect-code`, or a generic `pytest`/`biome`) that should have been invoked at least once before `submit`. Checked against direct tool names and the first word of `executeCommand`/`terminal/create` commands (see [Measuring toolkit adoption](/guide/best-practices#measuring-toolkit-adoption)).
+Command names (e.g. a toolkit's `run-tests` or `inspect-code`, or a generic `pytest`/`biome`) that should have been invoked at least once before `submit`. Checked against direct tool names, the first word of `executeCommand`/`terminal/create` commands, and the `tool_<name>` first-class tool entries that `provider: anthropic`/`openai` register for each toolkit skill (e.g. `tool_run_tests` for `run-tests`, see [Measuring toolkit adoption](/guide/best-practices#measuring-toolkit-adoption)).
 
 This never blocks the run or affects `passed`/`score`; it only annotates `metrics["tool-adoption"]` with `{ passed, detail, required, missing }`, surfaced by `agr trace --quality` and the `TOOL ADOPTION BY CONFIG` footer of `agr bench`. Useful for spotting toolkit tools that are configured and described to the agent but never actually used.
 

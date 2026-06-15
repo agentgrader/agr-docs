@@ -137,6 +137,15 @@ see, at a glance, whether a custom `toolkits` CLI tool (vs. generic shell
 exploration like `find`/`grep`/`cd`) is actually being used, and to compare
 adoption across a `--matrix` of `toolkits` dimensions.
 
+With `provider: anthropic`/`openai`, each toolkit skill is also registered
+as a first-class tool named `tool_<name_with_underscores>` (e.g.
+`tool_rename_symbol` for `rename-symbol`), separate from
+`executeCommand`/`terminal/create`. `agr trace --tools` shows these calls
+under their own `tool_<name>` row, and `require_tools_before_submit`/
+`track_tools` recognize them as usages of `<name-with-hyphens>` alongside
+the `executeCommand:<name>` form, so a model is credited for adoption no
+matter which mechanism it picks.
+
 If you know up front which toolkit commands an agent *should* use, set
 [`require_tools_before_submit`](/reference/agent-config-yaml#require-tools-before-submit)
 in `agent.yaml` (e.g. `["run-tests", "inspect-code"]`). Every run then
