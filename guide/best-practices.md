@@ -269,6 +269,23 @@ rather than a misleading MISSING. This makes the *mechanism* of adoption
 part of the trace output itself, so a fold-in's effect is visible on every
 future run, not just the one where it was first measured by hand.
 
+**`bucketToolName` now looks past a leading `cd <dir> &&`/`cd <dir>;`
+prefix.** A re-run of the dead-code-removal task above showed the
+fold-in's effect on `inspect-code` (now credited via `show-diff`, closing
+half of a previously-MISSING `tool-adoption`), but `run-tests` was still
+MISSING even though the agent *had* run the tests, via `executeCommand
+{"command":"cd /app && python -m pytest test_mathutils.py test_consumer.py
+-v"}`. The bucketing took "the first word of the command" literally, so this
+collapsed to `executeCommand:cd` - hiding the real command (`python`) behind
+the directory change every agent makes before running anything. `cd`-prefix
+stripping (including chained `cd a && cd b && ...`) now makes
+`executeCommand:python`/`terminal/create:pytest`-style buckets visible
+regardless of whether the agent `cd`'d first. This doesn't change
+`run-tests`'s MISSING verdict here (raw `pytest` still isn't the toolkit's
+`run-tests` wrapper - that's a real, separate adoption gap), but it makes
+`track_tools` entries for plain commands (e.g. `pytest`, `git`) accurate
+even behind a `cd`, which previously undercounted them.
+
 ### A/B testing a `toolkits` dimension with `--matrix`
 
 When a `--matrix` varies `dimensions.toolkits` (e.g. `[[], ["./toolkits/my-tools"]]`)
