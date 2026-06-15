@@ -254,6 +254,21 @@ itself push adoption toward `inspect-code`/`optimize-imports`: once the
 agent's own verification step says "safe", it has no remaining reason to run
 a second, unrequested check.
 
+**`agr trace --quality` now shows *how* each required/tracked tool was
+adopted, not just whether it was.** The fold-in pattern above (e.g.
+`inspect-code` findings folded into `show-diff`'s output) flips
+`tool-adoption` from MISSING to OK without the agent ever calling the
+wrapped tool directly. That distinction used to be invisible: OK looked the
+same whether the agent called the tool itself or only received its output
+secondhand. `metrics["tool-adoption"]` and `metrics["tool-usage"]` now record
+a per-tool `usedVia: "direct" | "wrapped"`, and `agr trace --quality` prints
+one line per required/tracked tool: `run-tests: OK (called directly)` vs.
+`inspect-code: OK (via another tool's output)` vs. `MISSING`. Runs recorded
+before this change still print `OK (mechanism not recorded for this run)`
+rather than a misleading MISSING. This makes the *mechanism* of adoption
+part of the trace output itself, so a fold-in's effect is visible on every
+future run, not just the one where it was first measured by hand.
+
 ### A/B testing a `toolkits` dimension with `--matrix`
 
 When a `--matrix` varies `dimensions.toolkits` (e.g. `[[], ["./toolkits/my-tools"]]`)
