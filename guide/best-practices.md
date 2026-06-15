@@ -286,6 +286,24 @@ regardless of whether the agent `cd`'d first. This doesn't change
 `track_tools` entries for plain commands (e.g. `pytest`, `git`) accurate
 even behind a `cd`, which previously undercounted them.
 
+**A "surgical edit" tool can stay unused regardless of file size, if
+`readFile`/`writeFile` already cover the same edit.** A tool that adds a
+single line to a file (e.g. an "Auto Import" quick-fix that inserts a
+missing `import` statement) was tested on a one-file task whose target grew
+from ~7 lines to ~70 lines across iterations, specifically to check whether
+a bigger file would make the full-file `readFile`+`writeFile` round trip
+expensive enough that the agent would prefer the targeted tool instead.
+Adoption stayed at 0 at both sizes: the agent read the whole file, wrote the
+whole file back with the import and the rest of its edit included, and never
+reached for the dedicated tool - the larger file mostly showed up as extra
+cost (more ad-hoc verification steps), not a change in editing strategy. If
+a toolkit tool's value proposition is "fewer tokens for the same edit" rather
+than "an edit the agent couldn't otherwise make", don't expect file size
+alone to drive adoption; either fold its check into a tool from a step the
+agent already takes (see above), require it via
+`require_tools_before_submit`, or accept it as a convenience tool whose
+value is for ACP-agent parity / human use rather than organic LLM adoption.
+
 ### A/B testing a `toolkits` dimension with `--matrix`
 
 When a `--matrix` varies `dimensions.toolkits` (e.g. `[[], ["./toolkits/my-tools"]]`)
