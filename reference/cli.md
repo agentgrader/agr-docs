@@ -252,7 +252,10 @@ Validate a test case the way SWE-bench validates a candidate instance: static ch
 
 ```bash
 agr validate test-cases/fix-greeting/agr.yaml
+agr validate hello-world
 ```
+
+`<testCase>` accepts the same forms as [`agr run`](#agr-run): a path to an `agr.yaml` file, a directory containing one, or a test case name/directory basename resolved by searching the current directory.
 
 When `test_command` is missing, execution checks are skipped (shown with ⚠️). Use `--strict` in CI to require `test_command`, `fail_to_pass`, and `pass_to_pass`.
 
@@ -260,7 +263,7 @@ When `test_command` is missing, execution checks are skipped (shown with ⚠️)
 
 | Flag | Default | Description |
 |---|---|---|
-| `<testCase>` | Required | Path to an `agr.yaml` file. |
+| `<testCase>` | Required | Path to an `agr.yaml` file, a directory containing one, or a test case name/directory basename. |
 | `--strict` | `false` | Exit with code 1 if `test_command`, `fail_to_pass`, or `pass_to_pass` are missing. |
 | `--sandbox <provider>` | `docker` | Sandbox provider used for execution checks: `docker` or `e2b`. |
 | `--audit-toolkits` | `false` | Run the toolkit security audit on every `toolkits:` path referenced by the test case. |
