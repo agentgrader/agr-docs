@@ -41,7 +41,7 @@ Human-readable label for the benchmark. Shown in logs and useful in CI job names
 
 Path to the directory containing test case folders (each with an `agr.yaml`). Resolved relative to the manifest file.
 
-Example: if `bench.yaml` lives in `my-benchmark/` and `suite: ./test-cases`, Agentgrader loads every `agr.yaml` under `my-benchmark/test-cases/`.
+Example: if `bench.yaml` lives in `my-benchmark/` and `suite: ./tasks`, Agentgrader loads every `agr.yaml` under `my-benchmark/tasks/`.
 
 ### `agents`
 
@@ -89,7 +89,7 @@ my-benchmark/
   agents-configs/
     claude-sonnet.yaml
     gpt-4o-mini.yaml
-  test-cases/
+  tasks/
     fix-greeting/
       agr.yaml
       fixture/
@@ -102,7 +102,7 @@ my-benchmark/
 
 ```yaml
 name: nightly-regression
-suite: ./test-cases
+suite: ./tasks
 agents:
   glob: "./agents-configs/*.yaml"
 concurrency: 3
@@ -112,7 +112,7 @@ Equivalent without a manifest:
 
 ```bash
 agr bench \
-  --suite test-cases/ \
+  --suite tasks/ \
   --configs-dir agents-configs/ \
   --concurrency 3
 ```

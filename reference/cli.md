@@ -169,8 +169,8 @@ Run test cases against one or more agent configs (or an optimizer matrix). Shows
 ```bash
 agr bench hello-world --matrix matrix.yaml
 agr bench task-a task-b --configs agent.yaml
-agr bench --suite test-cases/ --configs agent.yaml,agent-alt.yaml --concurrency 2
-agr bench --suite test-cases/ --configs-dir agents-configs/
+agr bench --suite tasks/ --configs agent.yaml,agent-alt.yaml --concurrency 2
+agr bench --suite tasks/ --configs-dir agents-configs/
 agr bench --manifest bench.yaml
 ```
 
@@ -216,39 +216,39 @@ agr bench hello-world --matrix matrix.yaml
 agr bench task-a task-b --configs agent.yaml
 
 # Filter a suite to one test case
-agr bench hello-world --suite test-cases/ --configs agent.yaml
+agr bench hello-world --suite tasks/ --configs agent.yaml
 
 # Bench manifest (suite + agent glob in one file)
 agr bench --manifest bench.yaml
 
 # All agent YAMLs in a folder
-agr bench --suite test-cases/ --configs-dir agents-configs/
+agr bench --suite tasks/ --configs-dir agents-configs/
 
 # Single agent config (--config is an alias for --configs)
-agr bench --suite test-cases/ --config agent.yaml
+agr bench --suite tasks/ --config agent.yaml
 
 # Multiple agent configs
-agr bench --suite test-cases/ --configs agent.yaml,agent-openrouter.yaml
+agr bench --suite tasks/ --configs agent.yaml,agent-openrouter.yaml
 
 # ACP agent adapter
-agr bench --suite test-cases/ --configs agent-acp.yaml --adapters acp
+agr bench --suite tasks/ --configs agent-acp.yaml --adapters acp
 
 # Compare AI SDK loop vs ACP agent
-agr bench --suite test-cases/ --configs agent.yaml,agent-acp.yaml --adapters ai-sdk,acp
+agr bench --suite tasks/ --configs agent.yaml,agent-acp.yaml --adapters ai-sdk,acp
 
 # Optimizer matrix sweep
-agr bench --suite test-cases/ --matrix matrix.yaml
+agr bench --suite tasks/ --matrix matrix.yaml
 
 # Higher parallelism
 agr bench --manifest bench.yaml --concurrency 4
 
 # CI gate with report artifact
-agr bench --suite test-cases/ --config agent.yaml \
+agr bench --suite tasks/ --config agent.yaml \
   --fail-on-failure --min-solve-rate 0.8 \
   --report json --output reports/bench.json
 
 # Save baseline snapshot for PR comparison
-agr bench --suite test-cases/ --config agent.yaml --save-baseline baselines/main.json
+agr bench --suite tasks/ --config agent.yaml --save-baseline baselines/main.json
 ```
 
 See [Bench Manifest YAML](/reference/bench-manifest-yaml) for the manifest file format.
@@ -262,7 +262,7 @@ After the dashboard finishes, `agr bench` also prints a **TOOL USAGE BY CONFIG**
 Validate a test case the way SWE-bench validates a candidate instance: static checks, then (when `test_command` is set) pre-patch and post-patch execution inside Docker.
 
 ```bash
-agr validate test-cases/fix-greeting/agr.yaml
+agr validate fix-greeting
 agr validate hello-world
 ```
 
@@ -283,10 +283,10 @@ When `test_command` is missing, execution checks are skipped (shown with ⚠️)
 
 ```bash
 # Static + execution checks (when test_command is configured)
-agr validate test-cases/my-case/agr.yaml
+agr validate my-case
 
 # CI gate: reject incomplete definitions
-agr validate test-cases/my-case/agr.yaml --strict
+agr validate my-case --strict
 ```
 
 ## `agr import-pr`
@@ -294,7 +294,7 @@ agr validate test-cases/my-case/agr.yaml --strict
 Fetch a GitHub pull request diff, split it into solution and test patches, and scaffold a new test case with `expected_files` and `forbid_modified` pre-filled.
 
 ```bash
-agr import-pr owner/repo 123 --out test-cases/new-case --clone-fixture
+agr import-pr owner/repo 123 --out tasks/new-case --clone-fixture
 ```
 
 With `--clone-fixture`, the repo is checked out at the PR's base commit into `<out>/fixture`, and `success`/`test_command` are guessed from the project layout (Python, Node, Go). You still need to fill in `fail_to_pass` and `pass_to_pass` manually before `agr validate` can verify execution.
@@ -315,10 +315,10 @@ Set `GITHUB_TOKEN` to avoid GitHub's low unauthenticated rate limits.
 
 ```bash
 # Scaffold patches and agr.yaml only
-agr import-pr astropy/astropy 12907 --out test-cases/astropy-12907
+agr import-pr astropy/astropy 12907 --out tasks/astropy-12907
 
 # Clone fixture and guess test commands
-agr import-pr astropy/astropy 12907 --clone-fixture --out test-cases/astropy-12907
+agr import-pr astropy/astropy 12907 --clone-fixture --out tasks/astropy-12907
 
 # Scaffold and validate (after filling in fail_to_pass/pass_to_pass)
 agr import-pr astropy/astropy 12907 --clone-fixture --validate
