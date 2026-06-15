@@ -240,6 +240,20 @@ not short-circuit on the new verdict line. This gets the redundant tool's
 information to the agent for free, on the call it was already going to make,
 without adding a competing step to the workflow.
 
+**The redundancy generalizes across task shapes, not just renames.** On a
+task whose entire prompt was "remove this dead function and its now-unused
+import, then run the tests" (a textbook fit for `safe-delete` and
+`optimize-imports --fix`), the agent again called only `find-usages` to
+confirm the function had no callers before deleting it by hand, and never
+touched `safe-delete`, `optimize-imports`, or `inspect-code`. Combined with
+the two fixtures above (both renames), this is now three different task
+shapes where a generic "explore/verify" tool the agent already trusts
+(`find-usages`, or a plain `pytest`) fully substitutes for a purpose-built
+toolkit tool. Introducing a lint issue alongside the main change does not by
+itself push adoption toward `inspect-code`/`optimize-imports`: once the
+agent's own verification step says "safe", it has no remaining reason to run
+a second, unrequested check.
+
 ### A/B testing a `toolkits` dimension with `--matrix`
 
 When a `--matrix` varies `dimensions.toolkits` (e.g. `[[], ["./toolkits/my-tools"]]`)
