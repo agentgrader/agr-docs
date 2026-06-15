@@ -205,15 +205,23 @@ now sees the task's sandboxed `/app` fixture files - the same filesystem
 `toolkits:` and `sandbox.exec()` operate on - rather than the host.
 
 `sandboxed: true` requires a sandbox provider that implements `spawnStdio`
-(currently only `@agentgrader/sandbox-docker`); on other providers, the
-connection attempt fails and is logged the same as any other MCP connection
-error. It is only read by agent-openrouter's own MCP connection loop: for
-ACP runs, `convertMcpServersForAcp` skips any stdio `mcp_servers:` entry with
-`sandboxed: true` (logging a warning) rather than forwarding its sandbox-only
-`command`/`args` (e.g. `/app/...`) for the ACP agent subprocess to spawn on
-the host, where they don't exist. Supporting this for ACP would require ACP
-agent subprocesses themselves to spawn `mcpServers` stdio commands inside the
-sandbox container, which is out of scope for agentgrader's adapters.
+(currently `@agentgrader/sandbox-docker` and `@agentgrader/sandbox-e2b`); on
+other providers, the connection attempt fails and is logged the same as any
+other MCP connection error.
+
+### `sandboxed: true` for ACP agents via `agr-mcp-proxy`
+
+For ACP runs, `convertMcpServersForAcp` no longer skips stdio servers with
+`sandboxed: true`. When the sandbox provider exposes a `sandboxBridgeId`
+(Docker and E2B do), the server entry is rewritten to spawn
+`@agentgrader/mcp-sandbox-proxy` (`agr-mcp-proxy`) on the host. The proxy
+forwards MCP stdio into the sandbox container so `/app/...` paths in
+`command`/`args` resolve against the task fixture—the same filesystem
+`toolkits:` uses.
+
+Without `sandboxBridgeId`, the server is still skipped with a warning (the
+ACP subprocess cannot run sandbox-only commands on the host). Non-sandboxed
+stdio MCP servers continue to be forwarded unchanged.
 
 ### Scaffolding a new toolkit tool
 

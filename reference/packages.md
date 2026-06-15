@@ -10,6 +10,8 @@ Click any diagram to zoom and pan in the fullscreen viewer.
 graph TD
     Store["@agentgrader/store"] --> Core["@agentgrader/core"]
     Core --> SandboxDocker["@agentgrader/sandbox-docker"]
+    Core --> SandboxE2b["@agentgrader/sandbox-e2b"]
+    Core --> McpSandboxProxy["@agentgrader/mcp-sandbox-proxy"]
     Core --> AgentOpenRouter["@agentgrader/agent-openrouter"]
     Core --> AgentAcp["@agentgrader/agent-acp"]
     Core --> ScorerStatic["@agentgrader/scorer-static"]
@@ -18,6 +20,8 @@ graph TD
     Core --> CLI[agentgrader]
     Store --> CLI
     SandboxDocker --> CLI
+    SandboxE2b --> CLI
+    McpSandboxProxy --> CLI
     AgentOpenRouter --> CLI
     AgentAcp --> CLI
     ScorerStatic --> CLI
@@ -31,10 +35,12 @@ Current versions on npm (check `npm view <package> version` for the latest):
 
 | Package | Role |
 |---|---|
-| [`agentgrader`](https://www.npmjs.com/package/agentgrader) | CLI binary (`agr`). Commands: `run`, `bench`, `validate`, `import-pr`, `trace`. |
+| [`agentgrader`](https://www.npmjs.com/package/agentgrader) | CLI binary (`agr`). Commands: `run`, `bench`, `validate`, `import-pr`, `trace`, `compare-baseline`, `validate-toolkit`, `export`. |
 | [`@agentgrader/core`](https://www.npmjs.com/package/@agentgrader/core) | Schemas, runner (`runSingle`, `runBenchmark`), scorers, validation. |
 | [`@agentgrader/store`](https://www.npmjs.com/package/@agentgrader/store) | SQLite persistence (runs, traces, baselines) via Drizzle ORM. |
 | [`@agentgrader/sandbox-docker`](https://www.npmjs.com/package/@agentgrader/sandbox-docker) | Default Docker sandbox provider. |
+| [`@agentgrader/sandbox-e2b`](https://www.npmjs.com/package/@agentgrader/sandbox-e2b) | E2B cloud sandbox provider (`agr run/bench --sandbox e2b`). Requires `E2B_API_KEY`. |
+| [`@agentgrader/mcp-sandbox-proxy`](https://www.npmjs.com/package/@agentgrader/mcp-sandbox-proxy) | Stdio MCP proxy (`agr-mcp-proxy`) for running sandboxed MCP servers inside Docker/E2B from ACP agents. |
 | [`@agentgrader/agent-openrouter`](https://www.npmjs.com/package/@agentgrader/agent-openrouter) | Default agent adapter (OpenRouter, OpenAI, Anthropic via AI SDK). |
 | [`@agentgrader/agent-acp`](https://www.npmjs.com/package/@agentgrader/agent-acp) | ACP client adapter for external agents (Claude Code, Cursor Agent, etc.) over stdio. |
 | [`@agentgrader/scorer-static`](https://www.npmjs.com/package/@agentgrader/scorer-static) | Additive quality scorer: diff size, lint, TODO markers. |

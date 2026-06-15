@@ -77,7 +77,7 @@ agr run test-cases/fix-greeting/agr.yaml --config agent.yaml
 - **Summary panel**: a bordered `RUN SUMMARY` box showing status (`PASSED`/`FAILED`), step count, cost, duration, the prompt-cache hit rate (`prompt cache: X/Y input tokens served from cache (Z%)`), any run error, and the regression/diff/localization metric lines (skipped checks are flagged with `[skip]`).
 - **Diff**: if the agent changed any files, a `Diff` panel renders the unified git diff with added lines in green, removed lines in red, and hunk headers (`@@ ...`) in cyan. Large diffs are capped at 60 lines with a "... N more line(s)" note.
 
-Exit codes are unchanged: `0` once the run completes (regardless of `PASSED`/`FAILED`), `1` if the run itself throws (e.g. a sandbox or provider error).
+Exit codes: `0` once the run completes by default, even when the agent scores `FAILED`. Use `--fail-on-failure` to exit `1` on a failed run (required for CI gates). Exit `1` also when the run itself throws (e.g. a sandbox or provider error).
 
 ### Options
 
@@ -87,6 +87,16 @@ Exit codes are unchanged: `0` once the run completes (regardless of `PASSED`/`FA
 | `--config <path>` | Built-in default | Path to an agent config YAML. If omitted, uses `gpt-4o-mini` with `max_steps: 20`. |
 | `--adapter <name>` | `ai-sdk` | Agent adapter: `ai-sdk` (default AI SDK loop) or `acp` (external ACP agent). See [ACP Agent Adapter](/advanced/acp-agent). |
 | `--verbose` | `false` | Show full per-step detail (tool name + content preview) in the live step list, instead of the compact step/cost counter. |
+| `--fail-on-failure` | `false` | Exit with code 1 if the run does not pass. |
+| `--report <format>` | (none) | Write a report after the run (`json`, `jsonl`, `html`, `md`). |
+| `--output <path>` | (none) | Output path for `--report`. |
+| `--report-include-traces` | `false` | Include full step traces in `--report` output. |
+| `--sandbox <provider>` | `docker` | Sandbox provider: `docker` (local Docker) or `e2b` (E2B cloud). See [Custom Sandbox](/advanced/custom-sandbox). |
+| `--llm-judge` | `false` | Run `LlmJudgeScorer` after the agent completes. |
+| `--llm-judge-provider <name>` | `anthropic` | LLM judge provider: `anthropic` or `openai`. |
+| `--llm-judge-model <model>` | (provider default) | Model slug for the LLM judge. |
+| `--judge-gate` | `false` | Fail the run when the LLM judge score is below `--judge-min-score`. |
+| `--judge-min-score <score>` | `0.7` | Minimum normalized judge score when `--judge-gate` is set. |
 
 ### Examples
 
@@ -102,6 +112,12 @@ agr run test-cases/fix-greeting/agr.yaml --config agent.yaml --verbose
 
 # External ACP agent (Claude Code, Cursor Agent, ...)
 agr run test-cases/fix-greeting/agr.yaml --config agent-acp.yaml --adapter acp
+
+# CI gate: fail the job when the agent does not pass
+agr run test-cases/fix-greeting/agr.yaml --config agent.yaml --fail-on-failure
+
+# LLM judge with a pass/fail gate
+agr run test-cases/fix-greeting/agr.yaml --config agent.yaml --llm-judge --judge-gate --judge-min-score 0.75
 ```
 
 ## `agr bench`
@@ -126,8 +142,24 @@ agr bench --manifest bench.yaml
 | `--matrix <path>` | (none) | Optimizer matrix YAML. Expands into the cartesian product of agent configs, tags runs with a shared `matrixId`, and prints a Pareto summary. See [Core Concepts: Optimizer matrices](/guide/concepts#optimizer-matrices). |
 | `--adapters <names>` | `ai-sdk` | Comma-separated adapter names (`ai-sdk`, `acp`). Runs the full config matrix once per adapter. |
 | `--concurrency <n>` | `2` | Number of parallel sandbox executions. Overrides manifest `concurrency` when set. |
+| `--fail-on-failure` | `false` | Exit with code 1 if any run in the benchmark fails. |
+| `--min-solve-rate <rate>` | (none) | Exit with code 1 if solve rate is below this threshold (0–1). |
+| `--min-solve-rate-scope <scope>` | `global` | Apply `--min-solve-rate` globally or per agent config (`global`, `per-config`). |
+| `--report <format>` | (none) | Write a report after the bench (`json`, `jsonl`, `html`, `md`). |
+| `--output <path>` | (none) | Output path for `--report`. |
+| `--report-include-traces` | `false` | Include full step traces in `--report` output. |
+| `--save-baseline <path>` | (none) | Write a baseline snapshot JSON after the bench completes. |
+| `--sandbox <provider>` | `docker` | Sandbox provider: `docker` or `e2b`. |
+| `--strict-toolkits` | `false` | Exit with code 1 if any referenced toolkit fails the security audit. |
+| `--llm-judge` | `false` | Run `LlmJudgeScorer` on each completed run. |
+| `--llm-judge-provider <name>` | `anthropic` | LLM judge provider: `anthropic` or `openai`. |
+| `--llm-judge-model <model>` | (provider default) | Model slug for the LLM judge. |
+| `--judge-gate` | `false` | Fail runs when the LLM judge score is below `--judge-min-score`. |
+| `--judge-min-score <score>` | `0.7` | Minimum normalized judge score when `--judge-gate` is set. |
 
 Use only **one** agent source per run: `--manifest`, `--configs`/`--config`, `--configs-dir`, or `--matrix`.
+
+Exit codes: `0` by default after a completed bench. Use `--fail-on-failure`, `--min-solve-rate`, and/or `--strict-toolkits` for CI gates. See [CI Integration](/advanced/ci-integration).
 
 ### Examples
 
@@ -155,6 +187,14 @@ agr bench --suite test-cases/ --matrix matrix.yaml
 
 # Higher parallelism
 agr bench --manifest bench.yaml --concurrency 4
+
+# CI gate with report artifact
+agr bench --suite test-cases/ --config agent.yaml \
+  --fail-on-failure --min-solve-rate 0.8 \
+  --report json --output reports/bench.json
+
+# Save baseline snapshot for PR comparison
+agr bench --suite test-cases/ --config agent.yaml --save-baseline baselines/main.json
 ```
 
 See [Bench Manifest YAML](/reference/bench-manifest-yaml) for the manifest file format.
@@ -179,6 +219,8 @@ When `test_command` is missing, execution checks are skipped (shown with ⚠️)
 |---|---|---|
 | `<testCase>` | Required | Path to an `agr.yaml` file. |
 | `--strict` | `false` | Exit with code 1 if `test_command`, `fail_to_pass`, or `pass_to_pass` are missing. |
+| `--sandbox <provider>` | `docker` | Sandbox provider used for execution checks: `docker` or `e2b`. |
+| `--audit-toolkits` | `false` | Run the toolkit security audit on every `toolkits:` path referenced by the test case. |
 
 ### Examples
 
@@ -315,6 +357,89 @@ agr compare <runIdA> <runIdB> --only-diff
 # Full content for divergent steps
 agr compare <runIdA> <runIdB> --only-diff --full
 ```
+
+## `agr compare-baseline`
+
+Compare two baseline snapshot JSON files, or compare the most recent runs in `.agr/db.sqlite` against a saved baseline. Useful for PR comments and regression gates. See [CI Integration: Baseline comparison](/advanced/ci-integration#baseline-comparison-in-pull-requests).
+
+```bash
+agr compare-baseline baselines/main.json baselines/pr.json
+agr compare-baseline --current baselines/main.json --format md --output comment.md
+```
+
+### Options
+
+| Flag | Default | Description |
+|---|---|---|
+| `[snapshotA]` | (none) | Path to the baseline snapshot (older/reference). |
+| `[snapshotB]` | (none) | Path to the current snapshot (newer/candidate). |
+| `--current <path>` | (none) | Compare recent runs in the SQLite DB against this baseline snapshot instead of two files. |
+| `--format <format>` | `md` | Output format: `md` (PR comment markdown) or `json`. |
+| `--output <path>` | (none) | Write comparison to a file instead of stdout. |
+| `--db <path>` | `.agr/db.sqlite` | SQLite database for `--current`. |
+| `--fail-on-regression` | `false` | Exit with code 1 if solve rate dropped or any previously passing case regressed. |
+
+### Examples
+
+```bash
+# Side-by-side snapshot diff on stdout
+agr compare-baseline baselines/main.json baselines/pr-42.json
+
+# PR comment markdown from the latest bench run in the DB
+agr compare-baseline --current baselines/main.json --format md --output comment.md
+
+# Fail CI when regressions are detected
+agr compare-baseline --current baselines/main.json --fail-on-regression
+```
+
+Pair with `agr bench --save-baseline <path>` to produce snapshot files.
+
+## `agr validate-toolkit`
+
+Run the toolkit security audit on a toolkit directory (`bin/` scripts and `.claude/skills/`). Reports risky patterns (network calls, shell escapes, missing skill docs).
+
+```bash
+agr validate-toolkit ./toolkits/jetbrains-tools
+agr validate-toolkit ./toolkits/jetbrains-tools --strict
+```
+
+### Options
+
+| Flag | Default | Description |
+|---|---|---|
+| `<dir>` | Required | Path to the toolkit directory. |
+| `--strict` | `false` | Exit with code 1 on warnings as well as errors. |
+
+`agr bench --strict-toolkits` and `agr validate --audit-toolkits` use the same audit logic across referenced toolkits.
+
+## `agr export`
+
+Export run metadata or step traces from `.agr/db.sqlite` for downstream analytics or observability pipelines.
+
+```bash
+agr export runs --format jsonl --output runs.jsonl
+agr export traces --run-id <runId> --format otlp --output trace.json
+```
+
+### Subcommands
+
+| Subcommand | Description |
+|---|---|
+| `runs` | Export run rows (optionally filtered by `--matrix-id`). |
+| `traces` | Export step traces for a single run (`--run-id` required). |
+
+### Options
+
+| Flag | Default | Description |
+|---|---|---|
+| `--format <format>` | `json` | Export format: `json`, `jsonl`, or `otlp` (traces only). |
+| `--output <path>` | auto-named | Output file path. |
+| `--db <path>` | `.agr/db.sqlite` | SQLite database to read. |
+| `--run-id <id>` | (none) | Run UUID (required for `export traces`). |
+| `--matrix-id <id>` | (none) | Filter `export runs` to a bench matrix id. |
+| `--limit <n>` | (none) | Maximum number of runs to export. |
+
+Set `AGR_EXPORT_ON_BENCH=true` to auto-export run JSON after each `agr bench` completes (written under `.agr/exports/`).
 
 ## `agr cleanup`
 

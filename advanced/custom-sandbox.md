@@ -1,6 +1,14 @@
 # Custom Sandbox Provider
 
-If you prefer to use a cloud sandbox provider like E2B, Daytona, or Firecracker instead of a local Docker setup, we have made it easy for you to build a Custom Sandbox Provider.
+The default CLI sandbox is local Docker (`--sandbox docker`). Agentgrader also ships a built-in [E2B](https://e2b.dev/) provider:
+
+```bash
+export E2B_API_KEY=...
+agr run tasks/hello-world/agr.yaml --config agent.yaml --sandbox e2b
+agr bench --suite test-cases/ --config agent.yaml --sandbox e2b
+```
+
+If you prefer another cloud provider (Daytona, Firecracker, etc.), implement the `SandboxProvider` interface below and pass your provider into the programmatic API, or wire it into a custom CLI wrapper.
 
 You just need to fulfill the `SandboxProvider` interface. This interface handles provisioning the environment and returns a `SandboxHandle`, which details exactly how to execute commands or interact with files in that specific environment.
 

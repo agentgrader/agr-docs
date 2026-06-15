@@ -185,6 +185,32 @@ Path to a patch that adds or updates tests. Applied **only during evaluation**: 
 
 Original issue or PR creation date. Used for contamination and date-cutoff checks during `agr validate`.
 
+### `rubrics`
+
+**Type:** `object[]` (optional)
+
+Custom LLM judge rubrics evaluated by `LlmJudgeScorer` when you pass `--llm-judge` to `agr run` or `agr bench`. Each rubric is scored independently; scores are weighted and normalized into a single `llmJudgeScore` recorded under `metrics["llm-judge"]`.
+
+| Field | Type | Description |
+|---|---|---|
+| `id` | `string` | Stable rubric identifier (used in metrics output). |
+| `prompt` | `string` | Judge instruction for this dimension (e.g. correctness, style). |
+| `scale` | `"0-1"` \| `"1-5"` | Score range. Defaults to `"0-1"`. |
+| `weight` | `number` | Relative weight when aggregating rubric scores. Defaults to `1`. |
+
+```yaml
+rubrics:
+  - id: correctness
+    prompt: Does the patch fix the described bug without introducing regressions?
+    scale: "0-1"
+    weight: 2
+  - id: style
+    prompt: Is the code idiomatic and readable?
+    scale: "1-5"
+```
+
+Combine with `--judge-gate` and `--judge-min-score` to fail runs whose aggregate judge score falls below a threshold. See [CLI Reference: `--llm-judge`](/reference/cli#agr-run).
+
 ## Validating a test case
 
 ```bash

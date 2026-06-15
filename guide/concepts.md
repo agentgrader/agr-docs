@@ -96,7 +96,14 @@ Core scorers determine pass/fail:
 `agr bench` also runs **additive, non-blocking** quality scorers that never affect `passed`:
 
 - **StaticQualityScorer** (`@agentgrader/scorer-static`, always on): diff size, files touched, TODO markers, lint violations. Recorded under `metrics["static-quality"]`.
-- **LlmJudgeScorer** (`@agentgrader/scorer-llm-judge`, opt-in): LLM-rated correctness and quality. Recorded under `metrics["llm-judge"]`.
+- **LlmJudgeScorer** (`@agentgrader/scorer-llm-judge`, opt-in via `--llm-judge`): LLM-rated patch quality. Recorded under `metrics["llm-judge"]`. Per-test-case `rubrics:` in `agr.yaml` add weighted judge dimensions; `--judge-gate` can fail runs below `--judge-min-score`.
+
+Enable on the CLI:
+
+```bash
+agr bench --suite test-cases/ --config agent.yaml --llm-judge --judge-gate --judge-min-score 0.75
+agr run test-cases/my-case/agr.yaml --config agent.yaml --llm-judge --llm-judge-provider openai
+```
 
 Inspect these for a single run with [`agr trace <runId> --quality`](/reference/cli#agr-trace).
 
@@ -166,5 +173,7 @@ Every run is recorded locally in **`.agr/db.sqlite`** (created in the directory 
 | `test_cases` / `agent_configs` | Definitions seen during runs |
 
 Look up a run by ID with [`agr trace <runId>`](/reference/cli#agr-trace). The run ID appears in bench/run output and in the database.
+
+Save baseline snapshots with `agr bench --save-baseline <path>` and compare PR results with [`agr compare-baseline`](/reference/cli#agr-compare-baseline). Export run rows or OTLP traces with [`agr export`](/reference/cli#agr-export) for external analytics.
 
 To start fresh, delete `.agr/db.sqlite`. Test case folders on disk are never modified by Agentgrader: only the sandbox copy inside Docker is edited.
