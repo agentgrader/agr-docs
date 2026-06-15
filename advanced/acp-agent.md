@@ -231,6 +231,30 @@ the script's implementation and the skill's description, then reference the
 toolkit directory from `toolkits:` in an agent config or test case. `--dir`
 defaults to `./toolkit`.
 
+### Auditing a toolkit's tools
+
+Use `agr toolkit-list <dir>` to list every executable in `<dir>/bin/`
+alongside its `.claude/skills/<name>/SKILL.md` description, flagging tools
+that have no skill doc yet:
+
+```bash
+agr toolkit-list ./toolkits/jetbrains-tools
+```
+
+Add `--check-config <agent.yaml>` to diff the toolkit's `bin/` tools against
+that config's `track_tools`/`require_tools_before_submit` lists (for
+`--matrix` files, the `base:`-nested versions of those fields are read too):
+
+```bash
+agr toolkit-list ./toolkits/jetbrains-tools --check-config agent-jetbrains.yaml
+```
+
+This reports tools that exist in `bin/` but aren't tracked by that config
+(easy to miss when a toolkit grows and only one of several configs
+referencing it gets updated), and tracked names that don't correspond to any
+`bin/` script (e.g. a typo, or a deliberately-tracked raw command like
+`pytest`).
+
 ## Programmatic API
 
 ```typescript
