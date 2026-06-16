@@ -96,6 +96,7 @@ If you are upgrading from 1.5.x, these flags and commands are new in 1.6.0:
 | status --test-case | `agr status --test-case <name>` shows solve rate, avg cost, avg duration, and run count for one test case; `--json` adds `solveRate`, `avgCostUsd`, `avgDurationMs` fields |
 | list --test-case | `agr list --plain --test-case <name>` filters the run list to a specific test case; consistent with status/trace/compare `--test-case` pattern |
 | list/status --config | `agr list --config <name>` and `agr status --config <name>` filter by agent config; useful for comparing performance between two configs via `agr status --config agent-a` vs `--config agent-b` |
+| export runs --format csv | `agr export runs --format csv --output runs.csv` writes a CSV file with one row per run; all fields including `metrics` (JSON-serialized) are included as columns; default filename is `export-runs.csv` |
 
 **Earlier additions** (1.5.x):
 

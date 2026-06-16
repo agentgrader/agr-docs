@@ -538,6 +538,7 @@ Export run metadata or step traces from `.agr/db.sqlite` for downstream analytic
 
 ```bash
 agr export runs --format jsonl --output runs.jsonl
+agr export runs --format csv --output runs.csv
 agr export traces --run-id <runId> --format otlp --output trace.json
 ```
 
@@ -552,7 +553,7 @@ agr export traces --run-id <runId> --format otlp --output trace.json
 
 | Flag | Default | Description |
 |---|---|---|
-| `--format <format>` | `json` | Export format: `json`, `jsonl`, or `otlp` (traces only). |
+| `--format <format>` | `json` | Export format: `json`, `jsonl`, `csv` (runs only), or `otlp` (traces only). |
 | `--output <path>` | auto-named | Output file path. |
 | `--db <path>` | `.agr/db.sqlite` | SQLite database to read. |
 | `--run-id <id>` | (none) | Run UUID for `export traces`. Use `--last` instead to avoid the lookup. |
@@ -566,7 +567,7 @@ agr export traces --run-id <runId> --format otlp --output trace.json
 | `--passed` | `false` | Export only runs that passed. Mutually exclusive with `--failed`. |
 | `--failed` | `false` | Export only runs that failed. Mutually exclusive with `--passed`. |
 
-Each `export runs` record includes: `id`, `testCaseId`, `agentConfigId`, `passed`, `costUsd`, `durationMs`, `stepsCount`, `tokensIn`, `tokensOut`, `matrixId`, and `metrics`.
+Each `export runs` record includes: `id`, `testCaseId`, `agentConfigId`, `passed`, `costUsd`, `durationMs`, `stepsCount`, `tokensIn`, `tokensOut`, `matrixId`, and `metrics`. For `--format csv`, all fields are included as columns; `metrics` is JSON-serialized in the cell.
 
 Set `AGR_EXPORT_ON_BENCH=true` to auto-export run JSON after each `agr bench` completes (written under `.agr/exports/`).
 
