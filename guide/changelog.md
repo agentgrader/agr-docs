@@ -51,6 +51,7 @@ If you are upgrading from 1.5.x, these flags and commands are new in 1.6.0:
 | trace human duration | `agr trace` now shows run duration in human-readable format (`45.0s`, `2m 30s`) instead of raw milliseconds (`45000ms`) |
 | export runs --last-matrix | `agr export runs --last-matrix` exports the most recent matrix sweep without requiring the matrix ID; `agr bench --matrix` Next: hint now uses it |
 | compare human duration | `agr compare` now shows run duration in human-readable format (`45.0s`, `2m 30s`) consistent with `agr trace`; `formatDuration` is now a shared utility |
+| list --plain duration | `agr list --plain` now shows run duration alongside cost and step count for quick performance comparison |
 
 **Earlier additions** (1.5.x):
 
