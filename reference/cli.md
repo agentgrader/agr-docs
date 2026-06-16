@@ -370,6 +370,7 @@ agr trace --last
 |---|---|---|
 | `[runId]` | Required unless `--last` | UUID of the run to inspect. |
 | `--last` | `false` | Trace the most recent run in `.agr/db.sqlite`. Overrides `[runId]` if both are given. |
+| `--test-case <name>` | (none) | With `--last`, trace the most recent run for this specific test case (substring match on `testCaseId`). |
 | `--quality` | `false` | Show only the quality-metrics breakdown (`static-quality`, `llm-judge`, diff, localization) instead of the full step trace. |
 | `--tools` | `false` | Show only a tool-usage breakdown: how many times each tool name appears across the run's `tool_call` steps, sorted by call count. |
 
@@ -381,6 +382,9 @@ agr trace --last
 
 # Tool-usage breakdown for the most recent run
 agr trace --last --tools
+
+# Trace the most recent run of a specific test case
+agr trace --last --test-case hello-world
 
 # Full step-by-step trace by ID
 agr trace 3f1c2e2a-8b4d-4e1f-9c3a-1a2b3c4d5e6f
