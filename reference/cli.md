@@ -206,6 +206,7 @@ agr bench --manifest bench.yaml
 | `--judge-gate` | `false` | Fail runs when the LLM judge score is below `--judge-min-score`. |
 | `--judge-min-score <score>` | `0.7` | Minimum normalized judge score when `--judge-gate` is set. |
 | `--dry-run` | `false` | Print the resolved test case x config matrix and exit without starting any runs. |
+| `--tags <tags>` | (none) | Comma-separated list of tags; only test cases whose `tags:` list matches at least one are included. Requires `--suite`. |
 
 Use only **one** agent source per run: `--manifest`, `--configs`/`--config`, `--configs-dir`, or `--matrix`.
 
@@ -257,6 +258,9 @@ agr bench --suite tasks/ --config agent.yaml --save-baseline baselines/main.json
 
 # Preview what would run (no sandbox, no API calls)
 agr bench --suite tasks/ --matrix matrix.yaml --dry-run
+
+# Run only test cases tagged "python" or "fast"
+agr bench --suite tasks/ --config agent.yaml --tags python,fast
 ```
 
 See [Bench Manifest YAML](/reference/bench-manifest-yaml) for the manifest file format.

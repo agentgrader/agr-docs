@@ -117,6 +117,7 @@ Tune limits per task difficulty. Tight limits catch runaway tool loops early. Mo
 | Full suite × several agents | `agr bench --suite tasks/ --configs-dir agents-configs/` |
 | Hyperparameter sweep (model × temperature) | `agr bench --matrix matrix.yaml --suite tasks/` |
 | Reproducible team config in one file | `agr bench --manifest bench.yaml` |
+| Run only tagged subset of a suite | `agr bench --suite tasks/ --config agent.yaml --tags python,fast` |
 
 Use [Bench Manifest YAML](/reference/bench-manifest-yaml) for suite + agent globs in one file. Use [Optimizer Matrix YAML](/reference/matrix-yaml) for cartesian products. Guide: [Optimizer matrices](/guide/optimizer-matrices).
 
