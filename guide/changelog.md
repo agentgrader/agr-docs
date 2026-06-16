@@ -101,6 +101,7 @@ If you are upgrading from 1.5.x, these flags and commands are new in 1.6.0:
 | trace/compare --config | `agr trace --last --config <name>` and `agr compare --last-two --config <name>` scope to the most recent run(s) for a specific agent config (substring match); completes the `--test-case`/`--config` filter symmetry across all per-run debug commands |
 | list/status --passed/--failed | `agr list --plain --failed` and `agr status --failed` filter to only failing runs; `--passed` for passing runs only; mutually exclusive; mirrors `agr export runs --passed/--failed` to complete the outcome-filter pattern across all analytics commands |
 | run --repeat | `agr run <name> --repeat 5` runs the same test case N times and prints a solve-rate summary (X/N PASS, avg cost, avg duration); useful for flakiness testing and verifying statistical consistency of a fix before scaling up with `agr bench` |
+| status --by-config | `agr status --by-config` shows a per-config breakdown: solve rate, avg cost, avg duration, avg tokens per agent config, sorted by solve rate; combinable with `--since` and `--test-case`; `--json` emits a `byConfig` array |
 
 **Earlier additions** (1.5.x):
 
