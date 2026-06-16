@@ -153,6 +153,7 @@ Exit codes: `0` once the run completes by default, even when the agent scores `F
 | `<testCase>` | Required | Path to an `agr.yaml` file, a directory containing one, or a test case name/directory basename (see above). |
 | `--config <path>` | Required if not in agr.yaml | Path to an agent config YAML. Required when the test case's `agr.yaml` does not specify `agent_config:`. |
 | `--model <model>` | (none) | Override the model from the agent config for this run only (e.g. `claude-opus-4-8`). Useful for quick one-off comparisons without editing YAML. |
+| `--max-steps <n>` | (none) | Override `max_steps` from the agent config for this run only. Useful for budget-capped smoke tests (`--max-steps 5`) or extended runs (`--max-steps 50`). |
 | `--adapter <name>` | `ai-sdk` | Agent adapter: `ai-sdk` (default AI SDK loop) or `acp` (external ACP agent). See [ACP Agent Adapter](/advanced/acp-agent). |
 | `--verbose` | `false` | Show full per-step detail (tool name + content preview) in the live step list, instead of the compact step/cost counter. |
 | `--repeat <n>` | (none) | Run the test case N times sequentially and print a solve-rate summary. Useful for flakiness testing or measuring statistical consistency of a fix before scaling up with `agr bench`. |
@@ -236,6 +237,7 @@ agr bench --manifest bench.yaml
 | `--only-failed` | `false` | Run only the test cases that failed on their most recent run in the DB. Useful for tight fix-and-retry loops: bench the full suite once, fix failing cases, then re-run only those with `--only-failed`. Exits cleanly if all previously-failed cases have since passed. |
 | `--shuffle` | `false` | Randomize the order of test cases before running. Reduces order-dependent bias in large suites and helps surface flaky tests that only fail when run after certain other tests. |
 | `--model <model>` | (none) | Override the model for all agent configs in this bench run (e.g. `claude-opus-4-8`). Useful for quick model comparisons without editing YAML or creating a new agent config file. |
+| `--max-steps <n>` | (none) | Override `max_steps` for all agent configs in this bench run. Combine with `--limit` for fast, cheap smoke tests: `--limit 3 --max-steps 5`. |
 
 Use only **one** agent source per run: `--manifest`, `--configs`/`--config`, `--configs-dir`, or `--matrix`.
 
