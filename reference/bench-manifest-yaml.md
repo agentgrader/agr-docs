@@ -127,6 +127,17 @@ agr bench \
 
 A manifest does **not** expand matrices. For sweeps, use [Core Concepts: Optimizer matrices](/guide/concepts#optimizer-matrices).
 
+## Tag filtering with a manifest
+
+Pass `--tags` alongside `--manifest` to run only the test cases that carry a matching tag. The suite is already defined in the manifest, so the filter applies automatically:
+
+```bash
+agr bench --manifest bench.yaml --tags python
+agr bench --manifest bench.yaml --tags fast,regression
+```
+
+The tag filter requires a suite to be defined (either from the manifest or `--suite`). Without one, a warning is printed and the filter is skipped.
+
 ## CI usage
 
 ```yaml
