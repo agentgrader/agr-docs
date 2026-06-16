@@ -218,6 +218,7 @@ agr bench --manifest bench.yaml
 | `--tags <tags>` | (none) | Comma-separated list of tags; only test cases whose `tags:` list matches at least one are included. Requires `--suite`. |
 | `--limit <n>` | (none) | Run only the first N test cases after filtering. Useful for quick smoke tests on large suites without running the full set. |
 | `--only-failed` | `false` | Run only the test cases that failed on their most recent run in the DB. Useful for tight fix-and-retry loops: bench the full suite once, fix failing cases, then re-run only those with `--only-failed`. Exits cleanly if all previously-failed cases have since passed. |
+| `--shuffle` | `false` | Randomize the order of test cases before running. Reduces order-dependent bias in large suites and helps surface flaky tests that only fail when run after certain other tests. |
 
 Use only **one** agent source per run: `--manifest`, `--configs`/`--config`, `--configs-dir`, or `--matrix`.
 
@@ -680,5 +681,6 @@ Output includes:
 | `--failed` | `false` | Restrict stats to runs that failed. Mutually exclusive with `--passed`. |
 | `--by-config` | `false` | Show a per-config breakdown: solve rate, avg cost, avg duration, and avg tokens per agent config, sorted by solve rate. Combinable with `--since` and `--test-case` to scope the data. |
 | `--by-test-case` | `false` | Show a per-test-case breakdown: solve rate, avg cost, avg duration, sorted by solve rate ascending (hardest first). Combinable with `--since` and `--config` to scope the data. |
+| `--top <n>` | (none) | With `--by-config` or `--by-test-case`, show only the first N entries. |
 
 The `--json` output contains: `exists`, `dbPath`, `since`, `testCase`, `config`, `passed`, `totalRuns`, `passedRuns`, `failedRuns`, `erroredRuns`, `solveRate`, `uniqueTestCases`, `uniqueConfigs`, `matrixRuns`, `totalCostUsd`, `avgCostUsd`, `avgDurationMs`, `totalTokensIn`, `totalTokensOut`, `lastRunAt`, `lastRunTestCaseId`, `lastRunAgentConfigId`. With `--by-config`, instead emits `{ exists, dbPath, since, testCase, byConfig: [{configId, total, passed, failed, solveRate, avgCostUsd, avgDurationMs, avgTokensIn, avgTokensOut}] }`.

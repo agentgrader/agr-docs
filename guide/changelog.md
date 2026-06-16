@@ -103,6 +103,8 @@ If you are upgrading from 1.5.x, these flags and commands are new in 1.6.0:
 | run --repeat | `agr run <name> --repeat 5` runs the same test case N times and prints a solve-rate summary (X/N PASS, avg cost, avg duration); useful for flakiness testing and verifying statistical consistency of a fix before scaling up with `agr bench` |
 | status --by-config | `agr status --by-config` shows a per-config breakdown: solve rate, avg cost, avg duration, avg tokens per agent config, sorted by solve rate; combinable with `--since` and `--test-case`; `--json` emits a `byConfig` array |
 | status --by-test-case | `agr status --by-test-case` shows a per-test-case breakdown: solve rate, avg cost, avg duration, sorted by solve rate ascending (hardest first); combinable with `--since` and `--config`; `--json` emits a `byTestCase` array |
+| bench --shuffle | `agr bench --suite tasks/ --shuffle` randomizes test case order before running; reduces order-dependent bias and helps surface order-sensitive flaky tests |
+| status --top | `agr status --by-test-case --top 5` or `--by-config --top 3` caps the breakdown output to N entries |
 
 **Earlier additions** (1.5.x):
 
