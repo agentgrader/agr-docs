@@ -139,7 +139,8 @@ Exit codes: `0` once the run completes by default, even when the agent scores `F
 | `--config <path>` | Required if not in agr.yaml | Path to an agent config YAML. Required when the test case's `agr.yaml` does not specify `agent_config:`. |
 | `--adapter <name>` | `ai-sdk` | Agent adapter: `ai-sdk` (default AI SDK loop) or `acp` (external ACP agent). See [ACP Agent Adapter](/advanced/acp-agent). |
 | `--verbose` | `false` | Show full per-step detail (tool name + content preview) in the live step list, instead of the compact step/cost counter. |
-| `--fail-on-failure` | `false` | Exit with code 1 if the run does not pass. |
+| `--repeat <n>` | (none) | Run the test case N times sequentially and print a solve-rate summary. Useful for flakiness testing or measuring statistical consistency of a fix before scaling up with `agr bench`. |
+| `--fail-on-failure` | `false` | Exit with code 1 if the run does not pass. With `--repeat`, exits 1 if any run fails. |
 | `--report <format>` | (none) | Write a report after the run (`json`, `jsonl`, `html`, `md`). |
 | `--output <path>` | (none) | Output path for `--report`. |
 | `--report-include-traces` | `false` | Include full step traces in `--report` output. |
@@ -158,6 +159,9 @@ agr run fix-greeting --config agent.yaml
 
 # Watch tool calls and messages in real time
 agr run fix-greeting --config agent.yaml --verbose
+
+# Run 5 times to measure flakiness before scaling with bench
+agr run fix-greeting --config agent.yaml --repeat 5
 
 # External ACP agent (Claude Code, Cursor Agent, ...)
 agr run fix-greeting --config agent-acp.yaml --adapter acp
