@@ -74,6 +74,7 @@ If you are upgrading from 1.5.x, these flags and commands are new in 1.6.0:
 | trace/compare token totals | `agr trace` and `agr compare` run headers now show `tokens: N in / M out` when token data is available |
 | report by-config avg tokens | `agr bench --report` HTML and Markdown by-config tables now include `Avg tokens in` and `Avg tokens out` columns |
 | git-context toolkit | `examples/toolkits/git-context` adds `recent-changes` (recently modified files) and `file-log` (per-file commit history) as a second complete multi-tool toolkit reference |
+| status command | `agr status` prints a quick DB summary (total runs, pass/fail counts, unique test cases and configs, total cost, last run time) without launching the TUI |
 
 **Earlier additions** (1.5.x):
 
