@@ -41,6 +41,7 @@ If you are upgrading from 1.5.x, these flags and commands are new in 1.6.0:
 | bench failed cases | `agr bench` (single-config) now prints `Failed: case-a, case-b` after the result summary when up to 10 test cases fail, showing which tests need attention inline |
 | bench error distinction | `agr bench` result now shows separate `Failed:` (test didn't pass) and `Errored:` (sandbox crash) lines, with the error snippet for crashes |
 | bench startup breakdown | `agr bench` startup log now shows `N test case(s) x M config(s) = K run(s)` breakdown for multi-config runs |
+| bench tag breakdown notes | Tag breakdown rows now show `all passed` or `none passed` annotation for 100%/0% solve rate tags |
 
 **Earlier additions** (1.5.x):
 
