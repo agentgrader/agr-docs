@@ -71,6 +71,7 @@ If you are upgrading from 1.5.x, these flags and commands are new in 1.6.0:
 | baseline avg duration and steps | `agr bench --save-baseline` now records `avgDurationMs` and `avgStepsCount`; `agr compare-baseline` output shows `Avg duration` and `Avg steps` rows with percentage deltas |
 | export runs steps and tokens | `agr export runs` now includes `stepsCount`, `tokensIn`, and `tokensOut` in each exported record alongside cost, duration, and metrics |
 | init gitignore | `agr init` now creates a `.gitignore` (skipped if one exists) ignoring `.agr/` and `.env`, preventing accidental commits of the run database |
+| trace/compare token totals | `agr trace` and `agr compare` run headers now show `tokens: N in / M out` when token data is available |
 
 **Earlier additions** (1.5.x):
 
