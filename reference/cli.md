@@ -77,7 +77,7 @@ agr init --blank
 
 ## `agr list-tests`
 
-Recursively scan a directory for test case files (`agr.yaml` and similar) and print each one's `name`, relative path, and description. Useful for discovering what `agr run`/`agr bench` accept as a short name instead of a full path.
+Recursively scan a directory for test case files (`agr.yaml` and similar) and print each one's `name`, relative path, description, and tags (when any test case in the set has tags). Useful for discovering what `agr run`/`agr bench` accept as a short name instead of a full path.
 
 ```bash
 agr list-tests
@@ -209,7 +209,7 @@ agr bench --manifest bench.yaml
 | `--llm-judge-model <model>` | (provider default) | Model slug for the LLM judge. |
 | `--judge-gate` | `false` | Fail runs when the LLM judge score is below `--judge-min-score`. |
 | `--judge-min-score <score>` | `0.7` | Minimum normalized judge score when `--judge-gate` is set. |
-| `--dry-run` | `false` | Print the resolved test case x config matrix and exit without starting any runs. |
+| `--dry-run` | `false` | Print the resolved test case x config matrix and exit without starting any runs. Tags (if any) are shown inline per test case. |
 | `--tags <tags>` | (none) | Comma-separated list of tags; only test cases whose `tags:` list matches at least one are included. Requires `--suite`. |
 
 Use only **one** agent source per run: `--manifest`, `--configs`/`--config`, `--configs-dir`, or `--matrix`.
