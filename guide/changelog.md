@@ -37,6 +37,7 @@ If you are upgrading from 1.5.x, these flags and commands are new in 1.6.0:
 | compare --last-two | `agr compare --last-two` compares the two most recent runs; multi-config bench `Next:` hint now suggests it |
 | list-tests next hint | `agr list-tests` now shows a context-aware next hint: suggests `agr bench --suite --tags` when `--tags` are active, or `agr bench --suite` for multiple results |
 | run pass/fail hint | `agr run` shows `Next: agr bench <name>` on pass (scale up) and `Inspect: agr trace --last` on fail (debug) |
+| trace next hints | `agr trace` now prints a `Next:` hint at the end of each view mode, cross-linking `--quality`, `--tools`, and `agr compare --last-two` |
 
 **Earlier additions** (1.5.x):
 
