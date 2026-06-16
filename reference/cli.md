@@ -650,6 +650,42 @@ agr toolkit-list ./toolkits/jetbrains-tools --check-config matrix-jetbrains-tool
 
 The `--check-config` flag accepts both agent config YAMLs (top-level `track_tools`) and matrix YAMLs (`base.track_tools`). This catches the common drift where a new toolkit tool is added to `bin/` but forgotten in one or more agent configs.
 
+## `agr doctor`
+
+Run a pre-flight check of the local environment before your first bench. Checks Docker, API keys, the run database, an `agent.yaml`, and at least one test case.
+
+```bash
+agr doctor
+agr doctor --suite my-tasks/
+```
+
+Each check prints a status icon:
+
+- `✓` pass
+- `!` warning (non-fatal, but worth reviewing)
+- `✗` fail (exits 1)
+- `-` skipped (optional prerequisite not present)
+
+Checks performed:
+
+| Check | Failure condition |
+|---|---|
+| Docker daemon | `docker info` fails or Docker is not installed |
+| `ANTHROPIC_API_KEY` | Env var not set (warning, not fatal) |
+| `OPENAI_API_KEY` | Not set (skipped, only needed for `provider: openai` or LLM judge) |
+| `E2B_API_KEY` | Not set (skipped, only needed for `--sandbox e2b`) |
+| Database (`--db`) | `.agr/db.sqlite` not found (warning -- will be created on first run) |
+| Agent config | `agent.yaml` not found in cwd (warning) |
+| Test cases (`--suite`) | No `agr.yaml` found under the suite directory (warning) |
+| Runtime | Always passes; shows Node.js version |
+
+### Options
+
+| Flag | Default | Description |
+|---|---|---|
+| `--db <path>` | `.agr/db.sqlite` | Database path to check. |
+| `--suite <dir>` | `tasks` | Suite directory to scan for `agr.yaml` files. |
+
 ## `agr cleanup`
 
 Lists (or, with `--yes`, removes) leftover sandbox containers from runs whose process exited or was killed before the `cleanup` workflow step could call `destroy()` - for example a hung provider request that an external `timeout` had to kill. These show up as containers running `tail -f /dev/null`, labeled `agentgrader.sandbox=true` by `DockerSandboxProvider`.

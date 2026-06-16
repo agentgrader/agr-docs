@@ -110,6 +110,7 @@ If you are upgrading from 1.5.x, these flags and commands are new in 1.6.0:
 | run/bench --model | `agr run <name> --model claude-opus-4-8` and `agr bench --suite tasks/ --model claude-opus-4-8` override the model for the run without editing the agent YAML; useful for quick model comparisons |
 | run/bench --max-steps | `agr run <name> --max-steps 5` and `agr bench --suite tasks/ --max-steps 5` override `max_steps` without editing YAML; combine with `--limit` for cheap smoke tests |
 | bench --skip-tags | `agr bench --suite tasks/ --skip-tags slow` excludes test cases with any of the specified tags; applied after `--tags` so you can include a broad set and then exclude a subset |
+| doctor command | `agr doctor` runs a pre-flight check: Docker daemon, API keys, database, agent config, and test case discovery; exits 1 when any required check fails |
 
 **Earlier additions** (1.5.x):
 
