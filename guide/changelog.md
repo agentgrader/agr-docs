@@ -112,6 +112,7 @@ If you are upgrading from 1.5.x, these flags and commands are new in 1.6.0:
 | bench --skip-tags | `agr bench --suite tasks/ --skip-tags slow` excludes test cases with any of the specified tags; applied after `--tags` so you can include a broad set and then exclude a subset |
 | doctor command | `agr doctor` runs a pre-flight check: Docker daemon, API keys, database, agent config, and test case discovery; exits 1 when any required check fails |
 | init --example python | `agr init --example python` scaffolds a Python hello-world test case with `math.py` and `test_math.py` verified with `pytest -x` instead of the default JS/Node example |
+| list-tests --count | `agr list-tests --count` prints only the number of matching test cases as a bare integer; useful in shell scripts and CI conditions |
 
 **Earlier additions** (1.5.x):
 
