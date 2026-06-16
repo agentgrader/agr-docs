@@ -33,20 +33,20 @@ bunx agentgrader --help
 
 ## 2. Set your API key
 
-The CLI loads a `.env` file from the current working directory automatically. Create one in your project folder:
+The scaffold created in the next step uses `provider: anthropic` with `claude-haiku-4-5`, so `ANTHROPIC_API_KEY` is all you need. The CLI loads a `.env` file from the current working directory automatically:
 
 ```bash
 # .env
-OPENROUTER_API_KEY=sk-or-...
+ANTHROPIC_API_KEY=sk-ant-...
 ```
 
-Alternatively, export the variable in your shell:
+Or export it in your shell:
 
 ```bash
-export OPENROUTER_API_KEY=sk-or-...
+export ANTHROPIC_API_KEY=sk-ant-...
 ```
 
-To call Anthropic or OpenAI directly, set `provider: anthropic` or `provider: openai` in your agent config (see [Agent Config](/reference/agent-config-yaml)) and provide `ANTHROPIC_API_KEY` or `OPENAI_API_KEY` instead. The scaffold created in the next step defaults to `provider: anthropic` with `claude-haiku-4-5`, so `ANTHROPIC_API_KEY` is the fastest path.
+To use OpenRouter or OpenAI directly, set `provider: openrouter` or `provider: openai` in your agent config (see [Agent Config](/reference/agent-config-yaml)) and provide `OPENROUTER_API_KEY` or `OPENAI_API_KEY` instead.
 
 ## 3. Scaffold a project
 
@@ -91,7 +91,7 @@ Example verbose output:
 ...
 ```
 
-Once you've added more test cases under `tasks/`, run `agr list-tests` to see every test case's `name`, path, and description, then refer to any of them the same way: `agr run <name>`.
+Once the run finishes, inspect the trace with `agr trace --last` (or add `--tools` to see a tool-call breakdown). Once you've added more test cases under `tasks/`, run `agr list-tests` to see every test case's `name`, path, and description, then refer to any of them the same way: `agr run <name>`.
 
 ## 5. Run a benchmark (optional)
 

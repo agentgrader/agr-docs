@@ -119,7 +119,7 @@ agr bench --suite tasks/ --config agent.yaml \
   --report md --output reports/judge.md
 ```
 
-Inspect per-run scores: `agr trace <runId> --quality`.
+Inspect per-run scores: `agr trace --last --quality` (or `agr trace <runId> --quality` for a specific run).
 
 ## Toolkit matrix A/B
 

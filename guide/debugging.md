@@ -5,9 +5,16 @@ Every completed run gets a UUID stored in `.agr/db.sqlite`.
 ## Quick commands
 
 ```bash
+# Most recent run (no UUID needed)
+agr trace --last
+agr trace --last --quality
+agr trace --last --tools
+
+# Specific run by ID
 agr trace <runId>
 agr trace <runId> --quality
 agr trace <runId> --tools
+
 agr compare <runIdA> <runIdB> --only-diff
 agr list
 ```
