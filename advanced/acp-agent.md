@@ -113,10 +113,12 @@ it to install dependencies the toolkit's scripts (or the agent's own ad-hoc
 commands) need, e.g. `pip install pytest` on a bare `python:3.11` image. See
 [Best Practices](/guide/best-practices#toolkit-setup-hooks-setup-sh).
 
-A ready-made example combining both fields lives at
-`examples/configs/agent-acp-claude-with-toolkit.yaml`: it adds `toolkits:
-[../toolkits/code-search]` to the same `acp_command: claude` setup as
-`agent-acp-claude.yaml` above.
+Ready-made examples combining both fields:
+
+- `examples/configs/agent-acp-claude-with-toolkit.yaml`: adds `toolkits: [../toolkits/code-search]` (grep-based symbol search) to the `acp_command: claude` setup.
+- To use the `git-context` toolkit instead (or in addition), set `toolkits: [../toolkits/git-context]` for `recent-changes` and `file-log` tools.
+
+See [Toolkits: Reference examples](/guide/toolkits#reference-examples) for the full table.
 
 ```bash
 agr run hello-world \

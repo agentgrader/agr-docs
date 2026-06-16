@@ -73,6 +73,27 @@ Individual `bin/` scripts can also self-install dependencies as defense in depth
 
 Wrapped tools count as used when they print a self-identifying `<name>: ...` marker line in output.
 
+## Reference examples
+
+Two complete, runnable toolkit examples ship under `examples/toolkits/`:
+
+| Toolkit | Tools | Description |
+|---|---|---|
+| `examples/toolkits/code-search` | `find-todos`, `find-usages` | Grep-based symbol and annotation search |
+| `examples/toolkits/git-context` | `recent-changes`, `file-log` | Git history tools for codebase orientation |
+
+Both follow the standard layout: `bin/` scripts, `.claude/skills/*/SKILL.md` progressive-disclosure docs, and no external dependencies beyond git. Use them as starting points for your own toolkits.
+
+To use `git-context` with an ACP agent:
+
+```yaml
+# agent.yaml
+acp_command: claude
+acp_args: [--acp]
+toolkits:
+  - examples/toolkits/git-context
+```
+
 ## Next steps
 
 - [Recipes: toolkit matrix A/B](/guide/recipes#toolkit-matrix-ab)
