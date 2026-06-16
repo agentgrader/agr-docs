@@ -47,6 +47,7 @@ If you are upgrading from 1.5.x, these flags and commands are new in 1.6.0:
 | list --plain next hints | `agr list --plain` footer now shows `agr trace --last`, `agr compare --last-two`, and `agr list` (TUI) as actionable next steps instead of the circular "Open interactively" message |
 | validate-toolkit next hints | `agr validate-toolkit` prints `Next:` on success and a fix-and-rerun instruction on failure, completing the toolkit audit workflow |
 | bench zero-solve inspect hint | `agr bench` shows `Inspect:` instead of `Next:` when solve rate is 0% (even without gates), since a 0% result always means the user needs to debug |
+| bench large failure count | `agr bench` now shows `Failed: N cases (see \`agr list\`)` when more than 10 cases fail, instead of silently omitting the failure detail |
 
 **Earlier additions** (1.5.x):
 
