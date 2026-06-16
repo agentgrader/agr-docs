@@ -70,6 +70,7 @@ This writes `.github/workflows/agr.yml` — a minimal GitHub Actions workflow th
 | `--force` | `false` | Overwrite `agent.yaml` if it already exists. Without it, `agr init` refuses to run on a directory that already has an `agent.yaml`, similar to `git init` on an existing repo. |
 | `--blank` | `false` | Only write `agent.yaml` and an empty `tasks/` directory, without the `hello-world` sample test case. |
 | `--ci` | `false` | Also write `.github/workflows/agr.yml` — a GitHub Actions CI workflow that runs `agr bench --suite tasks/ --fail-on-failure` on push and pull_request. Skipped if the file already exists. |
+| `--example <lang>` | `js` | Sample test case language for the scaffolded hello-world. `js` (default) uses Node's built-in test runner. `python` (or `py`) uses `pytest -x` — scaffolds `math.py` and `test_math.py` instead. Requires `pytest` in the sandbox Docker image. |
 
 ### Examples
 
@@ -89,6 +90,9 @@ agr init --blank
 # With CI workflow
 agr init --ci
 agr init --blank --ci
+
+# Python test case (pytest-based)
+agr init --example python
 ```
 
 ## `agr list-tests`
