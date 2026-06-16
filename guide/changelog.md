@@ -27,6 +27,9 @@ If you are upgrading from 1.5.x, these flags and commands are new in 1.6.0:
 | Bugfix: trace --last steps | `agr trace --last` was showing 0 steps (bug: passed `undefined` to `getTraces`); now fixed |
 | --tags without --suite warning | `agr bench --tags` and `agr validate --tags` without `--suite` now print a warning instead of silently doing nothing |
 | More Next: hints | `agr compare` now prints `Next: agr trace <idA>  \| agr trace <idB>` after the step diff summary; `agr compare-baseline --output` suggests posting the file as a PR comment |
+| Debug hints on empty suite | `agr bench --suite` and `agr validate --suite` print `agr list-tests <dir>` when no test cases are found or no cases match `--tags` |
+| --report without --output warning | `agr run --report <fmt>` and `agr bench --report <fmt>` without `--output` now warn instead of silently writing no report |
+| toolkit-list untracked hint | `agr toolkit-list --check-config` prints the exact `track_tools:` YAML snippet to copy when untracked tools are found |
 
 **Earlier additions** (1.5.x):
 
