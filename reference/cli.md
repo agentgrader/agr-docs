@@ -109,6 +109,7 @@ agr list-tests tasks/
 | Flag | Default | Description |
 |---|---|---|
 | `[dir]` | `.` | Directory to scan recursively for test case YAML files. |
+| `--name <substring>` | (none) | Filter by test case name substring (case-insensitive). Combinable with `--tags` and `--count`. |
 | `--json` | `false` | Print results as a JSON array (`name`, `path`, `relativePath`, optional `description`, optional `tags`) instead of a human-readable table. Useful for scripting or CI step that enumerates test cases. |
 | `--count` | `false` | Print only the number of matching test cases as a bare integer. Useful in shell conditions: `if [ $(agr list-tests --count) -eq 0 ]; then ...`. |
 | `--tags <tags>` | (none) | Comma-separated list of tags; only show test cases whose `tags:` list contains at least one match. |
