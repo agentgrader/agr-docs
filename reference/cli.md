@@ -372,6 +372,7 @@ agr trace --last
 | `[runId]` | Required unless `--last` | UUID of the run to inspect. |
 | `--last` | `false` | Trace the most recent run in `.agr/db.sqlite`. Overrides `[runId]` if both are given. |
 | `--test-case <name>` | (none) | With `--last`, trace the most recent run for this specific test case (substring match on `testCaseId`). |
+| `--config <name>` | (none) | With `--last`, trace the most recent run for this specific agent config (substring match on `agentConfigId`). |
 | `--quality` | `false` | Show only the quality-metrics breakdown (`static-quality`, `llm-judge`, diff, localization) instead of the full step trace. |
 | `--tools` | `false` | Show only a tool-usage breakdown: how many times each tool name appears across the run's `tool_call` steps, sorted by call count. |
 
@@ -386,6 +387,9 @@ agr trace --last --tools
 
 # Trace the most recent run of a specific test case
 agr trace --last --test-case hello-world
+
+# Trace the most recent run of a specific agent config
+agr trace --last --config agent-a
 
 # Full step-by-step trace by ID
 agr trace 3f1c2e2a-8b4d-4e1f-9c3a-1a2b3c4d5e6f
@@ -457,6 +461,7 @@ Run IDs come from bench/run output or the `runs` table in `.agr/db.sqlite`. Both
 | `[runIdB]` | Required unless `--last-two` | Second run to compare (shown as column B). |
 | `--last-two` | `false` | Compare the two most recent runs without specifying IDs. |
 | `--test-case <name>` | (none) | With `--last-two`, scope to the two most recent runs for this specific test case (substring match on `testCaseId`). |
+| `--config <name>` | (none) | With `--last-two`, scope to the two most recent runs for this specific agent config (substring match on `agentConfigId`). |
 | `--full` | `false` | Print full step content without the 200-character truncation used by `agr trace`. |
 | `--only-diff` | `false` | Show only divergent steps, plus one step of context before and after each divergence. |
 
@@ -474,6 +479,9 @@ agr compare <runIdA> <runIdB> --only-diff --full
 
 # Compare the two most recent runs (no IDs needed)
 agr compare --last-two --only-diff
+
+# Compare the two most recent runs of a specific config
+agr compare --last-two --config agent-a
 
 # Compare the two most recent runs of a specific test case
 agr compare --last-two --test-case hello-world
