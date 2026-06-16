@@ -282,7 +282,8 @@ When `test_command` is missing, execution checks are skipped (shown with ⚠️)
 
 | Flag | Default | Description |
 |---|---|---|
-| `[...testCases]` | Required (at least one) | One or more paths, directories, or test case names. When multiple are given, each is validated in turn; exits 1 if any fail. |
+| `[...testCases]` | Required unless `--suite` | One or more paths, directories, or test case names. When multiple are given, each is validated in turn; exits 1 if any fail. |
+| `--suite <dir>` | (none) | Validate every test case found recursively under this directory. Alternative to listing names as arguments. |
 | `--strict` | `false` | Exit with code 1 if `test_command`, `fail_to_pass`, or `pass_to_pass` are missing. |
 | `--sandbox <provider>` | `docker` | Sandbox provider used for execution checks: `docker` or `e2b`. |
 | `--audit-toolkits` | `false` | Run the toolkit security audit on every `toolkits:` path referenced by the test case. |
@@ -296,8 +297,11 @@ agr validate my-case
 # CI gate: reject incomplete definitions
 agr validate my-case --strict
 
-# Validate every test case in a directory at once
+# Validate multiple named test cases at once
 agr validate task-a task-b task-c --strict
+
+# Validate everything in the tasks/ directory
+agr validate --suite tasks/ --strict
 ```
 
 ## `agr import-pr`
@@ -337,24 +341,32 @@ agr import-pr astropy/astropy 12907 --clone-fixture --validate
 
 ## `agr trace`
 
-Print the step trace and metrics for a single run, looked up by run ID (shown in bench/run output and stored in `.agr/db.sqlite`).
+Print the step trace and metrics for a single run, looked up by run ID (shown in bench/run output and stored in `.agr/db.sqlite`). Use `--last` to skip the ID lookup entirely after `agr run`.
 
 ```bash
 agr trace 3f1c2e2a-8b4d-4e1f-9c3a-1a2b3c4d5e6f
+agr trace --last
 ```
 
 ### Options
 
 | Flag | Default | Description |
 |---|---|---|
-| `<runId>` | Required | UUID of the run to inspect. |
+| `[runId]` | Required unless `--last` | UUID of the run to inspect. |
+| `--last` | `false` | Trace the most recent run in `.agr/db.sqlite`. Overrides `[runId]` if both are given. |
 | `--quality` | `false` | Show only the quality-metrics breakdown (`static-quality`, `llm-judge`, diff, localization) instead of the full step trace. |
 | `--tools` | `false` | Show only a tool-usage breakdown: how many times each tool name appears across the run's `tool_call` steps, sorted by call count. |
 
 ### Examples
 
 ```bash
-# Full step-by-step trace
+# Full step-by-step trace (most recent run)
+agr trace --last
+
+# Tool-usage breakdown for the most recent run
+agr trace --last --tools
+
+# Full step-by-step trace by ID
 agr trace 3f1c2e2a-8b4d-4e1f-9c3a-1a2b3c4d5e6f
 
 # Quality metrics only

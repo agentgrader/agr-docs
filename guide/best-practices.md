@@ -63,10 +63,14 @@ agr validate fix-greeting --strict
 
 `--strict` fails when SWE-bench fields (`test_command`, `fail_to_pass`, `pass_to_pass`) are missing. Use it in CI before any `agr bench` step. See [CI workflows](/guide/ci-workflows).
 
-`agr validate` also accepts multiple test case names in one invocation, making it easy to gate a whole suite before benchmarking:
+`agr validate` accepts multiple test case names or a `--suite` directory, making it easy to gate a whole suite before benchmarking:
 
 ```bash
+# Named list
 agr validate task-a task-b task-c --strict
+
+# Everything in a directory
+agr validate --suite tasks/ --strict
 ```
 
 Exits 1 if any test case fails; prints a summary line at the end (`N/M validations passed`).
@@ -131,7 +135,7 @@ See [ACP Agent Adapter](/advanced/acp-agent) for config fields and tool routing.
 
 ## Debug failed runs
 
-Every run gets a UUID stored in `.agr/db.sqlite`. Start with `agr trace <runId>` and `--quality` / `--tools` as needed.
+Every run gets a UUID stored in `.agr/db.sqlite`. Use `agr trace --last` immediately after `agr run` to inspect the trace without copying the UUID, or `agr trace <runId>` to look up an older run. Add `--quality` or `--tools` as needed.
 
 Full workflow: [Debugging failed runs](/guide/debugging).
 
