@@ -89,7 +89,8 @@ agr list-tests tasks/
 | Flag | Default | Description |
 |---|---|---|
 | `[dir]` | `.` | Directory to scan recursively for test case YAML files. |
-| `--json` | `false` | Print results as a JSON array (`name`, `path`, `relativePath`, optional `description`) instead of a human-readable table. Useful for scripting or CI step that enumerates test cases. |
+| `--json` | `false` | Print results as a JSON array (`name`, `path`, `relativePath`, optional `description`, optional `tags`) instead of a human-readable table. Useful for scripting or CI step that enumerates test cases. |
+| `--tags <tags>` | (none) | Comma-separated list of tags; only show test cases whose `tags:` list contains at least one match. |
 
 ### Examples
 
@@ -102,6 +103,9 @@ agr list-tests tasks/
 
 # Machine-readable JSON (for scripting)
 agr list-tests --json | jq '.[].name'
+
+# Show only Python test cases
+agr list-tests --tags python
 ```
 
 ## `agr run`
@@ -291,6 +295,7 @@ When `test_command` is missing, execution checks are skipped (shown with ⚠️)
 | `--strict` | `false` | Exit with code 1 if `test_command`, `fail_to_pass`, or `pass_to_pass` are missing. |
 | `--sandbox <provider>` | `docker` | Sandbox provider used for execution checks: `docker` or `e2b`. |
 | `--audit-toolkits` | `false` | Run the toolkit security audit on every `toolkits:` path referenced by the test case. |
+| `--tags <tags>` | (none) | Comma-separated list of tags; only validate test cases whose `tags:` list contains at least one match. Requires `--suite`. |
 
 ### Examples
 
@@ -306,6 +311,9 @@ agr validate task-a task-b task-c --strict
 
 # Validate everything in the tasks/ directory
 agr validate --suite tasks/ --strict
+
+# Validate only the python subset
+agr validate --suite tasks/ --tags python --strict
 ```
 
 ## `agr import-pr`

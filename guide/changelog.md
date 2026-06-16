@@ -5,9 +5,24 @@ Release notes and breaking changes are published on GitHub:
 - [agentgrader/agr releases](https://github.com/agentgrader/agr/releases)
 - [npm `agentgrader` versions](https://www.npmjs.com/package/agentgrader?activeTab=versions)
 
-## Recent CLI additions
+## Recent CLI additions (1.6.0)
 
-If you are upgrading an older install, these flags and commands may be new:
+If you are upgrading from 1.5.x, these flags and commands are new in 1.6.0:
+
+| Feature | CLI surface |
+|---|---|
+| Project scaffold | `agr init` / `agr init --blank` |
+| Test case discovery | `agr list-tests [dir]`, `agr list-tests --json`, `agr list-tests --tags` |
+| Name-based resolution | `agr run <name>`, `agr validate <name>`, `agr bench <name>` (no path needed) |
+| Dry run preview | `agr bench --dry-run` |
+| Tag-based filtering | `--tags python,fast` on `bench`, `validate --suite`, `list-tests` |
+| Multi-validate | `agr validate task-a task-b --strict` |
+| Suite validate | `agr validate --suite tasks/ --strict` |
+| Last-run shortcut | `agr trace --last`, `agr trace --last --quality` |
+| Toolkit commands | `agr toolkit-add <name>`, `agr toolkit-list <dir>` |
+| Positional bench args | `agr bench task-a task-b --matrix matrix.yaml` |
+
+**Earlier additions** (1.5.x):
 
 | Feature | CLI surface |
 |---|---|
@@ -22,6 +37,8 @@ If you are upgrading an older install, these flags and commands may be new:
 Full reference: [CLI](/reference/cli).
 
 ## Migration notes
+
+**1.6.0 — No breaking changes.** All new flags are opt-in. Name-based `agr run <name>` is additive: path forms still work.
 
 **CI pipelines**: Add `--fail-on-failure` if your workflow assumed non-zero exit codes on agent failure. Previously `agr run`/`agr bench` exited `0` after a completed run regardless of pass/fail.
 
