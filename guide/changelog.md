@@ -60,6 +60,7 @@ If you are upgrading from 1.5.x, these flags and commands are new in 1.6.0:
 | toolkit-list next hints | `agr toolkit-list` now prints a `Next:` hint in the base case and a fix-and-rerun or proceed hint after `--check-config`, completing the toolkit audit workflow |
 | bench avg cost per run | `agr bench` result summary now shows `avg: $X.XXXX/run` when running multiple test cases; multi-config breakdown also shows per-config avg |
 | bench avg duration per run | `agr bench` result now shows `avg: Xs/run` alongside avg cost; multi-config breakdown shows per-config avg duration for speed vs cost comparisons |
+| report steps column | `agr bench --report` HTML and Markdown reports now include a `Steps` column alongside cost and duration |
 
 **Earlier additions** (1.5.x):
 
