@@ -598,3 +598,24 @@ agr cleanup --yes
 Set `step_timeout_ms` in `agent.yaml` (see [Agent Config: `step_timeout_ms`](/reference/agent-config-yaml#step-timeout-ms)) to prevent new leftovers in the first place - `agr cleanup` is for sweeping up containers from runs that predate that fix, or from any other interrupted run.
 
 Containers created before this label was added (older `@agentgrader/sandbox-docker` versions) won't be found by `agr cleanup`; remove those manually with `docker ps -a` / `docker rm -f`.
+
+## `agr status`
+
+Print a quick summary of the local run database without launching the interactive TUI. Useful as a health-check in scripts or CI logs.
+
+```bash
+agr status
+```
+
+Output includes:
+
+- Total runs with pass/fail/error breakdown
+- Number of unique test cases and agent configs
+- Total accumulated cost
+- Timestamp of the most recent run
+
+### Options
+
+| Flag | Default | Description |
+|---|---|---|
+| `--db <path>` | `.agr/db.sqlite` | SQLite database to read. |
