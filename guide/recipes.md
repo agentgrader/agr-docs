@@ -46,7 +46,7 @@ dimensions:
 
 ```bash
 agr bench --matrix matrix.yaml --suite tasks/ --fail-on-failure
-agr export runs --matrix-id <id-from-output> --format jsonl --output sweep.jsonl
+agr export runs --last-matrix --format jsonl --output sweep.jsonl
 ```
 
 See [Optimizer Matrix YAML](/reference/matrix-yaml) and [Optimizer matrices](/guide/optimizer-matrices).
