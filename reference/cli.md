@@ -302,6 +302,7 @@ When `test_command` is missing, execution checks are skipped (shown with ⚠️)
 ```bash
 # Static + execution checks (when test_command is configured)
 agr validate my-case
+# On success prints: Next: agr run my-case  |  agr bench my-case
 
 # CI gate: reject incomplete definitions
 agr validate my-case --strict
@@ -311,6 +312,7 @@ agr validate task-a task-b task-c --strict
 
 # Validate everything in the tasks/ directory
 agr validate --suite tasks/ --strict
+# On success prints: Next: agr bench --suite tasks/  |  agr bench --suite tasks/ --matrix matrix.yaml
 
 # Validate only the python subset
 agr validate --suite tasks/ --tags python --strict

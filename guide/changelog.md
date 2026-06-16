@@ -21,6 +21,7 @@ If you are upgrading from 1.5.x, these flags and commands are new in 1.6.0:
 | Last-run shortcut | `agr trace --last`, `agr trace --last --quality` |
 | Toolkit commands | `agr toolkit-add <name>`, `agr toolkit-list <dir>` |
 | Positional bench args | `agr bench task-a task-b --matrix matrix.yaml` |
+| Next-step hints | `agr run`, `agr bench`, `agr validate` print a contextual `Next:` line on success |
 
 **Earlier additions** (1.5.x):
 
