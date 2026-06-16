@@ -106,6 +106,7 @@ If you are upgrading from 1.5.x, these flags and commands are new in 1.6.0:
 | bench --shuffle | `agr bench --suite tasks/ --shuffle` randomizes test case order before running; reduces order-dependent bias and helps surface order-sensitive flaky tests |
 | status --top | `agr status --by-test-case --top 5` or `--by-config --top 3` caps the breakdown output to N entries |
 | export traces --test-case | `agr export traces --test-case hello-world` exports traces for all matching runs without a run ID; `--config`, `--since`, `--passed`, and `--limit` also filter multi-run trace exports; `agr export traces --last --test-case <name>` now correctly scopes to the most recent run for that test case (was ignoring `--test-case` before) |
+| init --ci | `agr init --ci` (and `agr init --blank --ci`) writes `.github/workflows/agr.yml` - a GitHub Actions workflow that installs agentgrader and runs `agr bench --suite tasks/ --fail-on-failure` on push and pull_request, wiring the CI gate in one command |
 
 **Earlier additions** (1.5.x):
 

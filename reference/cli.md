@@ -52,6 +52,16 @@ agr init --blank
 
 This writes only `agent.yaml` and an empty `tasks/` directory, skipping the `hello-world` sample. See [Core Concepts](/guide/concepts) for the `agr.yaml` schema, then run `agr list-tests` to confirm your test cases are found.
 
+Add `--ci` to also generate a GitHub Actions workflow:
+
+```bash
+agr init --ci
+# or combined:
+agr init --blank --ci
+```
+
+This writes `.github/workflows/agr.yml` — a minimal GitHub Actions workflow that installs `agentgrader` and runs `agr bench --suite tasks/ --fail-on-failure` on every push to `main` and on pull requests. Add `ANTHROPIC_API_KEY` as a repository secret to enable it. The CI workflow is a starting point; customize the `run:` step to add `--min-solve-rate`, reports, or baseline comparisons.
+
 ### Options
 
 | Flag | Default | Description |
@@ -59,6 +69,7 @@ This writes only `agent.yaml` and an empty `tasks/` directory, skipping the `hel
 | `[dir]` | `.` | Directory to scaffold into. Created if it does not exist. |
 | `--force` | `false` | Overwrite `agent.yaml` if it already exists. Without it, `agr init` refuses to run on a directory that already has an `agent.yaml`, similar to `git init` on an existing repo. |
 | `--blank` | `false` | Only write `agent.yaml` and an empty `tasks/` directory, without the `hello-world` sample test case. |
+| `--ci` | `false` | Also write `.github/workflows/agr.yml` — a GitHub Actions CI workflow that runs `agr bench --suite tasks/ --fail-on-failure` on push and pull_request. Skipped if the file already exists. |
 
 ### Examples
 
@@ -74,6 +85,10 @@ agr init my-project --force
 
 # Blank project: agent.yaml + empty tasks/, no sample test case
 agr init --blank
+
+# With CI workflow
+agr init --ci
+agr init --blank --ci
 ```
 
 ## `agr list-tests`
