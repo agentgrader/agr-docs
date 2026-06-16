@@ -539,6 +539,7 @@ agr export traces --run-id <runId> --format otlp --output trace.json
 | `--matrix-id <id>` | (none) | Filter `export runs` to a bench matrix id. |
 | `--last-matrix` | `false` | Export runs for the most recent matrix sweep (no `--matrix-id` needed). |
 | `--limit <n>` | (none) | Maximum number of runs to export. |
+| `--since <duration\|date>` | (none) | Filter `export runs` to runs created after this point. Accepts relative durations (`1h`, `24h`, `7d`) or ISO timestamps (`2026-06-15T00:00:00Z`). |
 
 Each `export runs` record includes: `id`, `testCaseId`, `agentConfigId`, `passed`, `costUsd`, `durationMs`, `stepsCount`, `tokensIn`, `tokensOut`, `matrixId`, and `metrics`.
 
