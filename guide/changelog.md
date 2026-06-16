@@ -64,6 +64,7 @@ If you are upgrading from 1.5.x, these flags and commands are new in 1.6.0:
 | formatDuration tests | `formatDuration` utility now has unit tests covering sub-second, sub-minute, and multi-minute cases plus zero-ms edge case |
 | report by-config avg duration | `agr bench --report` HTML and Markdown by-config tables now include `Avg duration` alongside avg cost for speed vs cost comparisons |
 | trace steps header | `agr trace` now shows `steps: N` in the run header, consistent with `agr compare` |
+| bench avg steps per run | `agr bench` result now shows `avg: N steps/run` alongside avg cost and avg duration; per-config breakdown also shows avg step count; duration avg note now uses consistent `avg:` prefix |
 
 **Earlier additions** (1.5.x):
 
