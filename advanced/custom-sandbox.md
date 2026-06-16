@@ -4,7 +4,7 @@ The default CLI sandbox is local Docker (`--sandbox docker`). Agentgrader also s
 
 ```bash
 export E2B_API_KEY=...
-agr run tasks/hello-world/agr.yaml --config agent.yaml --sandbox e2b
+agr run hello-world --config agent.yaml --sandbox e2b
 agr bench --suite tasks/ --config agent.yaml --sandbox e2b
 ```
 

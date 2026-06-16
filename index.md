@@ -59,5 +59,5 @@ agr init my-benchmark && cd my-benchmark
 Set an API key in `.env`, then run your first evaluation:
 
 ```bash
-agr run tasks/hello-world/agr.yaml --config agent.yaml --verbose
+agr run hello-world --verbose
 ```

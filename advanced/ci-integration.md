@@ -9,7 +9,7 @@ Use `assert:` criteria in test cases (`assert: steps <= 10`, `assert: cost_usd <
 Use `--fail-on-failure` on `agr run` and `agr bench` to exit with code 1 when a run does not pass. By default both commands exit 0 after a completed run (even when the agent failed scoring), which is convenient for local debugging but unsuitable as a CI gate.
 
 ```bash
-agr run tasks/hello-world/agr.yaml --config agent.yaml --fail-on-failure
+agr run hello-world --config agent.yaml --fail-on-failure
 agr bench --suite tasks/ --config agent.yaml --fail-on-failure
 ```
 
@@ -40,7 +40,7 @@ GitHub Actions example with artifact upload:
 ```yaml
       - name: Run benchmark
         env:
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           agr bench --suite tasks/ --config agent.yaml \
             --fail-on-failure --min-solve-rate 0.8 \
@@ -67,29 +67,35 @@ Post the markdown file as a PR comment with `actions/github-script` or `marocchi
 
 ## Validate test cases in CI
 
-Before running agents, verify test case definitions are complete:
+Before running agents, verify test case definitions are complete. `agr validate --suite` validates every test case under a directory in one command:
 
 ::: code-group
 
-```bash [npm]
-npm install -g agentgrader
-agr validate my-case --strict
-```
-
 ```bash [bun]
 bun add -g agentgrader
-agr validate my-case --strict
+agr validate --suite tasks/ --strict
+```
+
+```bash [npm]
+npm install -g agentgrader
+agr validate --suite tasks/ --strict
 ```
 
 :::
 
 `--strict` exits with code 1 if `test_command`, `fail_to_pass`, or `pass_to_pass` are missing. Without it, `agr validate` may pass with only static YAML checks (execution checks skipped when `test_command` is absent).
 
+To also run toolkit security audits:
+
+```bash
+agr validate --suite tasks/ --strict --audit-toolkits
+```
+
 See [Best Practices: Validate before you benchmark](/guide/best-practices#validate-before-you-benchmark).
 
 ## GitHub Actions example
 
-Benchmark on every pull request:
+Benchmark on every pull request, with validate gate, dry-run preview, and report artifact:
 
 ```yaml
 name: Agentgrader Benchmarks
@@ -102,24 +108,33 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
+      - uses: oven-sh/setup-bun@v2
 
       - name: Install Agentgrader
-        run: npm install -g agentgrader
+        run: bun add -g agentgrader
 
       - name: Validate test cases
-        run: |
-          for f in tasks/*/agr.yaml; do
-            agr validate "$f" --strict
-          done
+        run: agr validate --suite tasks/ --strict
+
+      - name: Preview bench matrix (dry run)
+        run: agr bench --suite tasks/ --config agent.yaml --dry-run
 
       - name: Run benchmark
         env:
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          agr bench --suite tasks/ --config agent.yaml --concurrency 2 --fail-on-failure --min-solve-rate 0.8
+          agr bench --suite tasks/ --config agent.yaml \
+            --concurrency 2 \
+            --fail-on-failure \
+            --min-solve-rate 0.8 \
+            --report json --output reports/bench.json
+
+      - name: Upload report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: agentgrader-report
+          path: reports/
 ```
 
 ## Things to keep in mind

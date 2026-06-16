@@ -80,7 +80,7 @@ Ready-made examples live in the main repository under `examples/configs/agent-ac
 Select the adapter explicitly; the default remains the AI SDK / OpenRouter adapter (`ai-sdk`).
 
 ```bash
-agr run tasks/hello-world/agr.yaml \
+agr run hello-world \
   --config examples/configs/agent-acp-claude.yaml \
   --adapter acp
 
@@ -119,7 +119,7 @@ A ready-made example combining both fields lives at
 `agent-acp-claude.yaml` above.
 
 ```bash
-agr run tasks/hello-world/agr.yaml \
+agr run hello-world \
   --config examples/configs/agent-acp-claude-with-toolkit.yaml \
   --adapter acp
 ```

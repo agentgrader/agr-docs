@@ -7,18 +7,37 @@ Patterns for running Agentgrader in pull-request and nightly pipelines.
 Agent runs are slow and cost money. Gate incomplete definitions first:
 
 ```bash
-agr validate tasks/fix-greeting/agr.yaml --strict
-agr validate tasks/fix-greeting/agr.yaml --audit-toolkits
+# Validate a single test case
+agr validate fix-greeting --strict
+
+# Validate every test case in a directory at once
+agr validate --suite tasks/ --strict
+
+# Also audit toolkit security (all referenced toolkits directories)
+agr validate --suite tasks/ --strict --audit-toolkits
 ```
 
-`--strict` fails when SWE-bench fields (`test_command`, `fail_to_pass`, `pass_to_pass`) are missing. `--audit-toolkits` runs the security audit on referenced toolkit directories.
+`--strict` exits 1 when SWE-bench fields (`test_command`, `fail_to_pass`, `pass_to_pass`) are missing. This makes it suitable as a pre-bench CI gate.
+
+## Preview before running
+
+Before a large bench (many tasks or a matrix sweep), use `--dry-run` to confirm the test case and config matrix without spending any API budget or starting Docker containers:
+
+```bash
+agr bench --suite tasks/ --matrix matrix.yaml --dry-run
+```
+
+The output shows every test case and config that would be included, with total job count.
 
 ## Exit codes for CI gates
 
 By default `agr run` and `agr bench` exit `0` even when the agent fails scoring. Use explicit gates:
 
 ```bash
-agr run tasks/foo/agr.yaml --config agent.yaml --fail-on-failure
+# Single run gate
+agr run hello-world --config agent.yaml --fail-on-failure
+
+# Suite gate with solve-rate floor
 agr bench --suite tasks/ --config agent.yaml \
   --fail-on-failure \
   --min-solve-rate 0.8 \
@@ -62,9 +81,21 @@ agr compare-baseline --current baselines/main.json \
 
 Post `comment.md` as a PR comment. See [Run history & export](/guide/persistence#baseline-snapshots).
 
+## Enumerate test cases from scripts
+
+Use `agr list-tests --json` to get a machine-readable list of test case names and paths, useful for build scripts or dynamic CI matrix generation:
+
+```bash
+# Get all test case names as a JSON array
+agr list-tests --json
+
+# Pipe to jq to extract names
+agr list-tests --json | jq -r '.[].name'
+```
+
 ## Runner checklist
 
-- Install with `npm install -g agentgrader` or `bun add -g agentgrader`
+- Install with `bun add -g agentgrader` or `npm install -g agentgrader`
 - Store API keys in encrypted CI secrets, not in the repo
 - Cap parallelism with `--concurrency` to match runner CPU and Docker limits
 - Gate expensive suites behind labels or scheduled workflows

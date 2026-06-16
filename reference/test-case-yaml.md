@@ -214,6 +214,8 @@ Combine with `--judge-gate` and `--judge-min-score` to fail runs whose aggregate
 ## Validating a test case
 
 ```bash
+agr validate my-case-name
+# or by path:
 agr validate path/to/agr.yaml
 ```
 
