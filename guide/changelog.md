@@ -52,6 +52,7 @@ If you are upgrading from 1.5.x, these flags and commands are new in 1.6.0:
 | export runs --last-matrix | `agr export runs --last-matrix` exports the most recent matrix sweep without requiring the matrix ID; `agr bench --matrix` Next: hint now uses it |
 | compare human duration | `agr compare` now shows run duration in human-readable format (`45.0s`, `2m 30s`) consistent with `agr trace`; `formatDuration` is now a shared utility |
 | list --plain duration | `agr list --plain` now shows run duration alongside cost and step count for quick performance comparison |
+| validate failure hint | `agr validate` now prints a fix-and-rerun instruction when validation fails, mirroring `agr validate-toolkit`; multi-case runs list only the failing names |
 
 **Earlier additions** (1.5.x):
 
