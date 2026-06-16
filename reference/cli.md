@@ -623,15 +623,17 @@ Print a quick summary of the local run database without launching the interactiv
 
 ```bash
 agr status
-agr status --json          # machine-readable output
-agr status --since 24h     # stats for just the last 24 hours
+agr status --json                     # machine-readable output
+agr status --since 24h                # stats for just the last 24 hours
+agr status --test-case hello-world    # solve rate and avg cost for one task
 ```
 
 Output includes:
 
-- Total runs with pass/fail/error breakdown
+- Total runs with pass/fail/error breakdown and solve rate
 - Number of unique test cases and agent configs
-- Total accumulated cost and token usage (when available)
+- Total and average cost, average duration
+- Total accumulated token usage (when available)
 - Timestamp of the most recent run
 
 ### Options
@@ -641,5 +643,6 @@ Output includes:
 | `--db <path>` | `.agr/db.sqlite` | SQLite database to read. |
 | `--json` | off | Emit JSON to stdout instead of formatted text. |
 | `--since <duration\|date>` | (none) | Restrict stats to runs after this point. Accepts relative durations (`1h`, `24h`, `7d`) or ISO timestamps. |
+| `--test-case <name>` | (none) | Restrict stats to runs for this specific test case (substring match). Shows solve rate, avg cost, and avg duration for that task. |
 
-The `--json` output contains: `exists`, `dbPath`, `since`, `totalRuns`, `passedRuns`, `failedRuns`, `erroredRuns`, `uniqueTestCases`, `uniqueConfigs`, `matrixRuns`, `totalCostUsd`, `totalTokensIn`, `totalTokensOut`, `lastRunAt`, `lastRunTestCaseId`, `lastRunAgentConfigId`.
+The `--json` output contains: `exists`, `dbPath`, `since`, `testCase`, `totalRuns`, `passedRuns`, `failedRuns`, `erroredRuns`, `solveRate`, `uniqueTestCases`, `uniqueConfigs`, `matrixRuns`, `totalCostUsd`, `avgCostUsd`, `avgDurationMs`, `totalTokensIn`, `totalTokensOut`, `lastRunAt`, `lastRunTestCaseId`, `lastRunAgentConfigId`.

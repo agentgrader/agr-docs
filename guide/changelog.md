@@ -93,6 +93,7 @@ If you are upgrading from 1.5.x, these flags and commands are new in 1.6.0:
 | export runs --passed/--failed | `agr export runs --passed` or `--failed` filters to only passing or only failing runs; useful for building failure analysis pipelines |
 | compare --last-two --test-case | `agr compare --last-two --test-case <name>` compares the two most recent runs of a specific test case without needing run IDs |
 | trace --last --test-case | `agr trace --last --test-case <name>` traces the most recent run for a specific test case; pairs with compare --last-two --test-case for per-task debug workflows |
+| status --test-case | `agr status --test-case <name>` shows solve rate, avg cost, avg duration, and run count for one test case; `--json` adds `solveRate`, `avgCostUsd`, `avgDurationMs` fields |
 
 **Earlier additions** (1.5.x):
 
