@@ -72,6 +72,7 @@ If you are upgrading from 1.5.x, these flags and commands are new in 1.6.0:
 | export runs steps and tokens | `agr export runs` now includes `stepsCount`, `tokensIn`, and `tokensOut` in each exported record alongside cost, duration, and metrics |
 | init gitignore | `agr init` now creates a `.gitignore` (skipped if one exists) ignoring `.agr/` and `.env`, preventing accidental commits of the run database |
 | trace/compare token totals | `agr trace` and `agr compare` run headers now show `tokens: N in / M out` when token data is available |
+| report by-config avg tokens | `agr bench --report` HTML and Markdown by-config tables now include `Avg tokens in` and `Avg tokens out` columns |
 
 **Earlier additions** (1.5.x):
 
