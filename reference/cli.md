@@ -607,7 +607,8 @@ Print a quick summary of the local run database without launching the interactiv
 
 ```bash
 agr status
-agr status --json   # machine-readable output
+agr status --json          # machine-readable output
+agr status --since 24h     # stats for just the last 24 hours
 ```
 
 Output includes:
@@ -623,5 +624,6 @@ Output includes:
 |---|---|---|
 | `--db <path>` | `.agr/db.sqlite` | SQLite database to read. |
 | `--json` | off | Emit JSON to stdout instead of formatted text. |
+| `--since <duration\|date>` | (none) | Restrict stats to runs after this point. Accepts relative durations (`1h`, `24h`, `7d`) or ISO timestamps. |
 
-The `--json` output contains: `exists`, `dbPath`, `totalRuns`, `passedRuns`, `failedRuns`, `erroredRuns`, `uniqueTestCases`, `uniqueConfigs`, `matrixRuns`, `totalCostUsd`, `totalTokensIn`, `totalTokensOut`, `lastRunAt`, `lastRunTestCaseId`, `lastRunAgentConfigId`.
+The `--json` output contains: `exists`, `dbPath`, `since`, `totalRuns`, `passedRuns`, `failedRuns`, `erroredRuns`, `uniqueTestCases`, `uniqueConfigs`, `matrixRuns`, `totalCostUsd`, `totalTokensIn`, `totalTokensOut`, `lastRunAt`, `lastRunTestCaseId`, `lastRunAgentConfigId`.

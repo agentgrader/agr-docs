@@ -87,6 +87,7 @@ If you are upgrading from 1.5.x, these flags and commands are new in 1.6.0:
 | status --json | `agr status --json` emits machine-readable JSON for use in CI scripts and shell pipelines |
 | export runs --since | `agr export runs --since <duration|date>` filters to runs created after a given point; accepts relative durations (1h, 24h, 7d) or ISO timestamps |
 | bench --limit | `agr bench --suite tasks/ --limit N` runs only the first N test cases after filtering; useful for quick smoke tests on large suites |
+| status --since | `agr status --since <duration|date>` restricts DB summary stats to runs after a given point; `--json` output includes `since` field |
 
 **Earlier additions** (1.5.x):
 
