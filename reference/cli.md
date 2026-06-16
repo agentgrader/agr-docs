@@ -547,6 +547,8 @@ agr export traces --run-id <runId> --format otlp --output trace.json
 | `--since <duration\|date>` | (none) | Filter `export runs` to runs created after this point. Accepts relative durations (`1h`, `24h`, `7d`) or ISO timestamps (`2026-06-15T00:00:00Z`). |
 | `--test-case <id>` | (none) | Filter `export runs` to runs whose `testCaseId` matches (substring). Useful for exporting all runs of a single task. |
 | `--config <id>` | (none) | Filter `export runs` to runs whose `agentConfigId` matches (substring). |
+| `--passed` | `false` | Export only runs that passed. Mutually exclusive with `--failed`. |
+| `--failed` | `false` | Export only runs that failed. Mutually exclusive with `--passed`. |
 
 Each `export runs` record includes: `id`, `testCaseId`, `agentConfigId`, `passed`, `costUsd`, `durationMs`, `stepsCount`, `tokensIn`, `tokensOut`, `matrixId`, and `metrics`.
 
