@@ -421,6 +421,8 @@ agr list
 | `--since <duration\|date>` | (none) | Only show runs after this point. Accepts relative durations (`1h`, `24h`, `7d`) or ISO timestamps. Applied before `--limit`. |
 | `--test-case <name>` | (none) | Only show runs for this specific test case (substring match on `testCaseId`). Applied before `--limit`. |
 | `--config <name>` | (none) | Only show runs for this specific agent config (substring match on `agentConfigId`). Applied before `--limit`. |
+| `--passed` | `false` | Only show runs that passed. Mutually exclusive with `--failed`. |
+| `--failed` | `false` | Only show runs that failed. Mutually exclusive with `--passed`. |
 
 ### Examples
 
@@ -439,6 +441,9 @@ agr list --plain --test-case hello-world
 
 # Show all runs for a specific agent config
 agr list --plain --config agent-fast
+
+# Show only failing runs (for triage)
+agr list --plain --failed
 ```
 
 In the interactive UI, use the arrow keys (or `j`/`k`) to move through the run list, `Enter` to open a run's detail view (agent diff plus a trace preview), `c` to start a diff comparison between two runs, `b`/`Esc` to go back, and `q` to quit.
@@ -644,6 +649,7 @@ agr status
 agr status --json                     # machine-readable output
 agr status --since 24h                # stats for just the last 24 hours
 agr status --test-case hello-world    # solve rate and avg cost for one task
+agr status --failed                   # count and cost of failing runs only
 ```
 
 Output includes:
@@ -663,5 +669,7 @@ Output includes:
 | `--since <duration\|date>` | (none) | Restrict stats to runs after this point. Accepts relative durations (`1h`, `24h`, `7d`) or ISO timestamps. |
 | `--test-case <name>` | (none) | Restrict stats to runs for this specific test case (substring match). Shows solve rate, avg cost, and avg duration for that task. |
 | `--config <name>` | (none) | Restrict stats to runs for this specific agent config (substring match). Useful for comparing performance between two configs. |
+| `--passed` | `false` | Restrict stats to runs that passed. Mutually exclusive with `--failed`. |
+| `--failed` | `false` | Restrict stats to runs that failed. Mutually exclusive with `--passed`. |
 
-The `--json` output contains: `exists`, `dbPath`, `since`, `testCase`, `config`, `totalRuns`, `passedRuns`, `failedRuns`, `erroredRuns`, `solveRate`, `uniqueTestCases`, `uniqueConfigs`, `matrixRuns`, `totalCostUsd`, `avgCostUsd`, `avgDurationMs`, `totalTokensIn`, `totalTokensOut`, `lastRunAt`, `lastRunTestCaseId`, `lastRunAgentConfigId`.
+The `--json` output contains: `exists`, `dbPath`, `since`, `testCase`, `config`, `passed`, `totalRuns`, `passedRuns`, `failedRuns`, `erroredRuns`, `solveRate`, `uniqueTestCases`, `uniqueConfigs`, `matrixRuns`, `totalCostUsd`, `avgCostUsd`, `avgDurationMs`, `totalTokensIn`, `totalTokensOut`, `lastRunAt`, `lastRunTestCaseId`, `lastRunAgentConfigId`.

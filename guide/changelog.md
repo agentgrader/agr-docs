@@ -99,6 +99,7 @@ If you are upgrading from 1.5.x, these flags and commands are new in 1.6.0:
 | export runs --format csv | `agr export runs --format csv --output runs.csv` writes a CSV file with one row per run; all fields including `metrics` (JSON-serialized) are included as columns; default filename is `export-runs.csv` |
 | bench --only-failed | `agr bench --suite tasks/ --only-failed` runs only the test cases that failed on their most recent DB run; enables tight fix-and-retry loops; exits cleanly when all previously-failed cases have since passed |
 | trace/compare --config | `agr trace --last --config <name>` and `agr compare --last-two --config <name>` scope to the most recent run(s) for a specific agent config (substring match); completes the `--test-case`/`--config` filter symmetry across all per-run debug commands |
+| list/status --passed/--failed | `agr list --plain --failed` and `agr status --failed` filter to only failing runs; `--passed` for passing runs only; mutually exclusive; mirrors `agr export runs --passed/--failed` to complete the outcome-filter pattern across all analytics commands |
 
 **Earlier additions** (1.5.x):
 
