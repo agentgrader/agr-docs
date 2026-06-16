@@ -274,6 +274,7 @@ agr bench --manifest bench.yaml
 | `--shuffle` | `false` | Randomize the order of test cases before running. Reduces order-dependent bias in large suites and helps surface flaky tests that only fail when run after certain other tests. |
 | `--model <model>` | (none) | Override the model for all agent configs in this bench run (e.g. `claude-opus-4-8`). Useful for quick model comparisons without editing YAML or creating a new agent config file. |
 | `--max-steps <n>` | (none) | Override `max_steps` for all agent configs in this bench run. Combine with `--limit` for fast, cheap smoke tests: `--limit 3 --max-steps 5`. |
+| `--name <substring>` | (none) | Filter test cases by name substring (case-insensitive). Applied after `--tags` and `--skip-tags`. Requires `--suite`. |
 | `--json` | `false` | Output bench results as a single JSON object and suppress the live dashboard. Useful for scripting and CI pipelines. |
 
 Use only **one** agent source per run: `--manifest`, `--configs`/`--config`, `--configs-dir`, or `--matrix`.
