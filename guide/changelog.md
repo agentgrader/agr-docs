@@ -124,6 +124,7 @@ If you are upgrading from 1.5.x, these flags and commands are new in 1.6.0:
 | validate --name | `agr validate --suite tasks/ --name "python"` filters test cases by name substring (case-insensitive) before validating; mirrors `agr bench --name` and `agr list-tests --name`; applied after `--tags` |
 | run --save-baseline | `agr run hello-world --save-baseline baselines/main.json` captures a single run's result as a baseline JSON snapshot (same format as `agr bench --save-baseline`) for later comparison with `agr compare-baseline --current`; also works with `--repeat N` to save all N runs as a multi-run snapshot |
 | run/bench --report-dir | `agr run <name> --report html --report-dir reports/` and `agr bench ... --report html --report-dir reports/` auto-generate a timestamped filename (`run-<timestamp>.html` / `bench-<timestamp>.html`) under the given directory when `--output` is not specified; useful in CI artifact archives where you always want a report but do not want to hardcode the filename |
+| list --json | `agr list --json` outputs the run list as a JSON array (fields: `id`, `testCaseId`, `testCaseName`, `agentConfigId`, `agentConfigName`, `agentModel`, `passed`, `costUsd`, `durationMs`, `stepsCount`, `tokensIn`, `tokensOut`, `error`, `matrixId`, `createdAt`, `completedAt`); suppressess plain/TUI output; combinable with `--since`, `--test-case`, `--config`, `--passed`, `--failed`, `--limit`; completes the `--json` pattern across all agr commands |
 
 **Earlier additions** (1.5.x):
 
