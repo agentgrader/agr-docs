@@ -526,6 +526,7 @@ agr trace --last
 | `--config <name>` | (none) | With `--last`, trace the most recent run for this specific agent config (substring match on `agentConfigId`). |
 | `--quality` | `false` | Show only the quality-metrics breakdown (`static-quality`, `llm-judge`, diff, localization) instead of the full step trace. |
 | `--tools` | `false` | Show only a tool-usage breakdown: how many times each tool name appears across the run's `tool_call` steps, sorted by call count. |
+| `--json` | `false` | Output as a JSON object. Default mode emits `{run, steps[]}` (each step has `stepIndex`, `kind`, `tool`, `content`, `tokensIn`, `tokensOut`, `cachedTokens`, `costUsd`). With `--quality` emits `{run, metrics}`. With `--tools` emits `{run, toolUsage}`. |
 
 ### Examples
 
