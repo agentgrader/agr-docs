@@ -844,6 +844,7 @@ agr cleanup --yes
 | Flag | Default | Description |
 |---|---|---|
 | `--yes` | `false` | Actually remove the listed containers. Without it, `agr cleanup` only lists what would be removed. |
+| `--json` | `false` | Output result as a JSON object `{found, removed, containers[]}` with `{id, image, status, ageMs}` per container. Without `--yes`, `removed` is always 0; with `--yes`, each container entry has a `removed` boolean and optional `error`. |
 
 Set `step_timeout_ms` in `agent.yaml` (see [Agent Config: `step_timeout_ms`](/reference/agent-config-yaml#step-timeout-ms)) to prevent new leftovers in the first place - `agr cleanup` is for sweeping up containers from runs that predate that fix, or from any other interrupted run.
 
