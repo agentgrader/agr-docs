@@ -164,6 +164,7 @@ Exit codes: `0` once the run completes by default, even when the agent scores `F
 | `--config <path>` | Required if not in agr.yaml | Path to an agent config YAML. Required when the test case's `agr.yaml` does not specify `agent_config:`. |
 | `--model <model>` | (none) | Override the model from the agent config for this run only (e.g. `claude-opus-4-8`). Useful for quick one-off comparisons without editing YAML. |
 | `--provider <provider>` | (none) | Override the provider from the agent config for this run only (e.g. `anthropic`, `openai`, `openrouter`). Combine with `--model` to switch provider and model in one command. |
+| `--temperature <n>` | (none) | Override the temperature from the agent config for this run only (0.0-1.0). Use `--temperature 0` for deterministic runs when debugging flakiness. |
 | `--max-steps <n>` | (none) | Override `max_steps` from the agent config for this run only. Useful for budget-capped smoke tests (`--max-steps 5`) or extended runs (`--max-steps 50`). |
 | `--adapter <name>` | `ai-sdk` | Agent adapter: `ai-sdk` (default AI SDK loop) or `acp` (external ACP agent). See [ACP Agent Adapter](/advanced/acp-agent). |
 | `--verbose` | `false` | Show full per-step detail (tool name + content preview) in the live step list, instead of the compact step/cost counter. |
@@ -307,6 +308,7 @@ agr bench --manifest bench.yaml
 | `--shuffle` | `false` | Randomize the order of test cases before running. Reduces order-dependent bias in large suites and helps surface flaky tests that only fail when run after certain other tests. |
 | `--model <model>` | (none) | Override the model for all agent configs in this bench run (e.g. `claude-opus-4-8`). Useful for quick model comparisons without editing YAML or creating a new agent config file. |
 | `--provider <provider>` | (none) | Override the provider for all agent configs in this bench run (e.g. `anthropic`, `openai`, `openrouter`). Combine with `--model` to switch provider and model without editing YAML. |
+| `--temperature <n>` | (none) | Override the temperature for all agent configs in this bench run (0.0-1.0). Use `--temperature 0` for deterministic reproducibility experiments. |
 | `--max-steps <n>` | (none) | Override `max_steps` for all agent configs in this bench run. Combine with `--limit` for fast, cheap smoke tests: `--limit 3 --max-steps 5`. |
 | `--name <substring>` | (none) | Filter test cases by name substring (case-insensitive). Applied after `--tags` and `--skip-tags`. Requires `--suite`. |
 | `--step-timeout <ms>` | (none) | Override `step_timeout_ms` for all agent configs in this bench run. Sets the per-LLM-call abort timeout in milliseconds. Useful in CI to cap provider latency without editing YAML (default is 120000). |
