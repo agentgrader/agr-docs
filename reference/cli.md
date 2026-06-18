@@ -311,6 +311,7 @@ agr bench --manifest bench.yaml
 | `--model <model>` | (none) | Override the model for all agent configs in this bench run (e.g. `claude-opus-4-8`). Useful for quick model comparisons without editing YAML or creating a new agent config file. |
 | `--provider <provider>` | (none) | Override the provider for all agent configs in this bench run (e.g. `anthropic`, `openai`, `openrouter`). Combine with `--model` to switch provider and model without editing YAML. |
 | `--temperature <n>` | (none) | Override the temperature for all agent configs in this bench run (0.0-1.0). Use `--temperature 0` for deterministic reproducibility experiments. |
+| `--repeat <n>` | `1` | Run each test case N times per config. The result summary shows solve rate across all trials (e.g. `--repeat 5` on 3 test cases = 15 runs per config). Useful for pass@k metrics and detecting flaky tests. |
 | `--max-steps <n>` | (none) | Override `max_steps` for all agent configs in this bench run. Combine with `--limit` for fast, cheap smoke tests: `--limit 3 --max-steps 5`. |
 | `--name <substring>` | (none) | Filter test cases by name substring (case-insensitive). Applied after `--tags` and `--skip-tags`. Requires `--suite`. |
 | `--step-timeout <ms>` | (none) | Override `step_timeout_ms` for all agent configs in this bench run. Sets the per-LLM-call abort timeout in milliseconds. Useful in CI to cap provider latency without editing YAML (default is 120000). |
