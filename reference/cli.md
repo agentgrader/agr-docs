@@ -583,6 +583,7 @@ agr list
 | `--passed` | `false` | Only show runs that passed. Mutually exclusive with `--failed`. |
 | `--failed` | `false` | Only show runs that failed. Mutually exclusive with `--passed`. |
 | `--model <substring>` | (none) | Only show runs where the agent model contains this substring (case-insensitive). Useful for comparing run histories across model versions (e.g. `--model haiku`). |
+| `--sort <field>` | `date` | Sort runs by `date` (newest first, default), `cost` (highest first), `duration` (longest first), or `steps` (most steps first). Applied after all filters and `--limit`. |
 | `--json` | `false` | Output runs as a JSON array and suppress plain-text and TUI output. Each element includes `id`, `testCaseId`, `testCaseName`, `agentConfigId`, `agentConfigName`, `agentModel`, `passed`, `costUsd`, `durationMs`, `stepsCount`, `tokensIn`, `tokensOut`, `error`, `matrixId`, `createdAt`, `completedAt`. Combinable with all filters. |
 
 ### Examples
@@ -605,6 +606,12 @@ agr list --plain --config agent-fast
 
 # Show only failing runs (for triage)
 agr list --plain --failed
+
+# Show most expensive runs first
+agr list --plain --sort cost
+
+# Find the slowest runs in the last week
+agr list --plain --since 7d --sort duration
 ```
 
 ```bash
@@ -612,6 +619,7 @@ agr list --plain --failed
 agr list --json | jq '.[].testCaseId'
 agr list --json --failed | jq 'length'
 agr list --json --since 24h | jq '[.[] | {id, testCaseId, passed, costUsd}]'
+agr list --json --sort cost | jq '.[0:5] | [.[] | {id, testCaseId, costUsd}]'
 ```
 
 In the interactive UI, use the arrow keys (or `j`/`k`) to move through the run list, `Enter` to open a run's detail view (agent diff plus a trace preview), `c` to start a diff comparison between two runs, `b`/`Esc` to go back, and `q` to quit.

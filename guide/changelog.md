@@ -136,6 +136,7 @@ If you are upgrading from 1.5.x, these flags and commands are new in 1.6.0:
 | run/bench --report-dir | `agr run <name> --report html --report-dir reports/` and `agr bench ... --report html --report-dir reports/` auto-generate a timestamped filename (`run-<timestamp>.html` / `bench-<timestamp>.html`) under the given directory when `--output` is not specified; useful in CI artifact archives where you always want a report but do not want to hardcode the filename |
 | trace --json | `agr trace --last --json` outputs the step trace as a JSON object; default mode emits `{run, steps[]}`, `--quality` emits `{run, metrics}`, `--tools` emits `{run, toolUsage}`; combinable with `--last`, `--test-case`, `--config` |
 | list --json | `agr list --json` outputs the run list as a JSON array (fields: `id`, `testCaseId`, `testCaseName`, `agentConfigId`, `agentConfigName`, `agentModel`, `passed`, `costUsd`, `durationMs`, `stepsCount`, `tokensIn`, `tokensOut`, `error`, `matrixId`, `createdAt`, `completedAt`); suppressess plain/TUI output; combinable with `--since`, `--test-case`, `--config`, `--passed`, `--failed`, `--limit`; completes the `--json` pattern across all agr commands |
+| list --sort | `agr list --sort <field>` sorts runs by `cost`, `duration`, or `steps` (all descending); default `date` preserves the previous newest-first order; applied after all filters and `--limit`; combinable with `--plain`, `--json`, `--model`, and any other filter |
 
 **Earlier additions** (1.5.x):
 
