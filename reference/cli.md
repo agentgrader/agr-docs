@@ -544,6 +544,7 @@ agr trace --last
 | `--quality` | `false` | Show only the quality-metrics breakdown (`static-quality`, `llm-judge`, diff, localization) instead of the full step trace. |
 | `--tools` | `false` | Show only a tool-usage breakdown: how many times each tool name appears across the run's `tool_call` steps, sorted by call count. |
 | `--json` | `false` | Output as a JSON object. Default mode emits `{run, steps[]}` (each step has `stepIndex`, `kind`, `tool`, `content`, `tokensIn`, `tokensOut`, `cachedTokens`, `costUsd`). With `--quality` emits `{run, metrics}`. With `--tools` emits `{run, toolUsage}`. |
+| `--steps <range>` | (all) | Show only the specified stepIndex range. Format: `40-60` (inclusive) or `42` (single step). The header shows `N step(s) [40-60] of 127 total` to preserve context. Combinable with `--last`, `--json`, and all run-selection flags. |
 
 ### Examples
 
@@ -553,6 +554,9 @@ agr trace --last
 
 # Tool-usage breakdown for the most recent run
 agr trace --last --tools
+
+# Show only steps 40-60 of a long trace
+agr trace --last --steps 40-60
 
 # Trace the most recent run of a specific test case
 agr trace --last --test-case hello-world
@@ -568,6 +572,9 @@ agr trace 3f1c2e2a-8b4d-4e1f-9c3a-1a2b3c4d5e6f --quality
 
 # Tool-usage breakdown (which tools the agent actually called, and how often)
 agr trace 3f1c2e2a-8b4d-4e1f-9c3a-1a2b3c4d5e6f --tools
+
+# Jump to a specific step range in a long trace
+agr trace 3f1c2e2a-8b4d-4e1f-9c3a-1a2b3c4d5e6f --steps 80-100
 ```
 
 `--tools` is especially useful for checking whether a custom toolkit, MCP server, or Agent Skill was actually used by the agent versus only made available to it. For example, if you wire in a custom toolkit but its tools show a count of `0`, the agent saw the tool but chose not to call it, which may be a sign the system prompt needs to nudge it more explicitly.
