@@ -953,6 +953,8 @@ agr status --by-config --test-case hello-world  # per-config for one task
 agr status --by-test-case             # per-task breakdown, hardest first
 agr status --since 24h --trend        # compare last 24h vs previous 24h
 agr status --since 7d --trend --test-case hello-world  # trend for one task
+agr status --since 7d --by-day        # daily breakdown for the past week
+agr status --since 30d --by-day --top 7  # last 7 days of a 30-day window
 ```
 
 Output includes:
@@ -985,6 +987,7 @@ Output includes:
 | `--matrix-id <id>` | (none) | Restrict stats to runs belonging to a specific bench matrix sweep (exact `matrixId` match). Combinable with all breakdown flags. |
 | `--last-matrix` | `false` | Restrict stats to runs from the most recent bench matrix sweep. Useful for inspecting the results of the last `agr bench --matrix` without filtering by date. |
 | `--trend` | `false` | Compare the `--since` window to the equal-length window before it. Requires `--since`. Shows solve-rate delta (pp), run count delta, and avg cost delta with directional arrows. |
+| `--by-day` | `false` | Show a per-day breakdown: runs, solve rate, and total cost per calendar day (UTC), sorted oldest-first. Combinable with `--since`, `--top`, and all filter flags. |
 
 The `--json` output contains: `exists`, `dbPath`, `since`, `testCase`, `config`, `model`, `passed`, `totalRuns`, `passedRuns`, `failedRuns`, `erroredRuns`, `solveRate`, `uniqueTestCases`, `uniqueConfigs`, `matrixRuns`, `totalCostUsd`, `avgCostUsd`, `avgDurationMs`, `totalTokensIn`, `totalTokensOut`, `lastRunAt`, `lastRunTestCaseId`, `lastRunAgentConfigId`. With `--by-config`, instead emits `{ exists, dbPath, since, testCase, byConfig: [{configId, total, passed, failed, solveRate, avgCostUsd, avgDurationMs, avgTokensIn, avgTokensOut}] }`.
 
