@@ -538,6 +538,9 @@ agr trace --last
 | `--last` | `false` | Trace the most recent run in `.agr/db.sqlite`. Overrides `[runId]` if both are given. |
 | `--test-case <name>` | (none) | With `--last`, trace the most recent run for this specific test case (substring match on `testCaseId`). |
 | `--config <name>` | (none) | With `--last`, trace the most recent run for this specific agent config (substring match on `agentConfigId`). |
+| `--model <substring>` | (none) | With `--last`, trace the most recent run where the agent model contains this substring (case-insensitive). Combinable with `--test-case`, `--config`, `--passed`, and `--failed`. |
+| `--passed` | `false` | With `--last`, trace the most recent run that passed. Mutually exclusive with `--failed`. |
+| `--failed` | `false` | With `--last`, trace the most recent run that failed. Mutually exclusive with `--passed`. |
 | `--quality` | `false` | Show only the quality-metrics breakdown (`static-quality`, `llm-judge`, diff, localization) instead of the full step trace. |
 | `--tools` | `false` | Show only a tool-usage breakdown: how many times each tool name appears across the run's `tool_call` steps, sorted by call count. |
 | `--json` | `false` | Output as a JSON object. Default mode emits `{run, steps[]}` (each step has `stepIndex`, `kind`, `tool`, `content`, `tokensIn`, `tokensOut`, `cachedTokens`, `costUsd`). With `--quality` emits `{run, metrics}`. With `--tools` emits `{run, toolUsage}`. |

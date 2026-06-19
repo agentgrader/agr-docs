@@ -151,6 +151,7 @@ If you are upgrading from 1.5.x, these flags and commands are new in 1.6.0:
 | status --sandbox | `agr status --sandbox e2b --by-model` restricts all stats to a specific sandbox provider; complements `--by-sandbox` breakdown and is combinable with `--model`, `--matrix-id`, and other filters |
 | agr count | `agr count --failed --since 24h` prints a plain integer count of matching runs; supports the same filters as `agr list`; `--json` emits `{total, passed, failed, dbPath}`; useful for CI gates and shell conditions |
 | export --sandbox --error | `agr export runs --sandbox e2b --error timeout` completes filter parity with `agr list`; both flags accept case-insensitive substrings and print a matching-count line before writing the file |
+| trace --model --passed --failed | `agr trace --last --model haiku --failed` scopes `--last` to the most recent run matching model + outcome; all three new flags combine with existing `--test-case` and `--config` |
 
 **Earlier additions** (1.5.x):
 
