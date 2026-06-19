@@ -594,6 +594,7 @@ agr list
 | `--sort <field>` | `date` | Sort runs by `date` (newest first, default), `cost` (highest first), `duration` (longest first), or `steps` (most steps first). Applied after all filters and `--limit`. |
 | `--matrix-id <id>` | (none) | Only show runs belonging to a specific bench matrix sweep (exact match on `matrixId`). |
 | `--last-matrix` | `false` | Only show runs from the most recent bench matrix sweep. Automatically resolves the most recent `matrixId` in the database. Combinable with `--plain`, `--json`, and `--sort`. |
+| `--sandbox <provider>` | (none) | Only show runs with a matching sandbox provider (substring match, case-insensitive). E.g. `--sandbox e2b` or `--sandbox docker`. Mirrors `agr status --by-sandbox` for filter symmetry. |
 | `--json` | `false` | Output runs as a JSON array and suppress plain-text and TUI output. Each element includes `id`, `testCaseId`, `testCaseName`, `agentConfigId`, `agentConfigName`, `agentModel`, `passed`, `costUsd`, `durationMs`, `stepsCount`, `tokensIn`, `tokensOut`, `error`, `matrixId`, `createdAt`, `completedAt`. Combinable with all filters. |
 
 ### Examples
