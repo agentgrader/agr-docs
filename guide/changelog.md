@@ -147,6 +147,7 @@ If you are upgrading from 1.5.x, these flags and commands are new in 1.6.0:
 | list --matrix-id --last-matrix | `agr list --last-matrix --plain` scopes the run browser to a single bench matrix sweep; `--matrix-id <id>` pins to a specific sweep; mirrors the same flags on `agr export runs` so you can inspect a sweep interactively without exporting first |
 | status --matrix-id --last-matrix | `agr status --last-matrix --by-model` restricts all stats to the most recent bench sweep; `--matrix-id <id>` pins to a specific sweep; combinable with all breakdown flags (`--by-config`, `--by-model`, `--by-sandbox`, etc.) |
 | list --sandbox | `agr list --sandbox e2b` filters the run list to runs with a matching sandbox provider (substring match); mirrors `agr status --by-sandbox` for filter symmetry; combinable with all other `agr list` flags |
+| list --error | `agr list --error timeout` filters runs whose error message contains the given substring; useful for grouping and counting runs by failure type without manual grep |
 
 **Earlier additions** (1.5.x):
 
