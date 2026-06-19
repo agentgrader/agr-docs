@@ -184,6 +184,7 @@ Exit codes: `0` once the run completes by default, even when the agent scores `F
 | `--judge-min-score <score>` | `0.7` | Minimum normalized judge score when `--judge-gate` is set. |
 | `--step-timeout <ms>` | (none) | Override `step_timeout_ms` from the agent config for this run only. Sets the per-LLM-call abort timeout in milliseconds. Useful in CI to cap provider latency without editing YAML (default is 120000). |
 | `--save-baseline <path>` | (none) | Write a baseline snapshot JSON after the run completes. Same format as `agr bench --save-baseline`; use `agr compare-baseline --current <path>` to compare. Also works with `--repeat N` to save all N runs as a multi-run snapshot. |
+| `--dry-run` | `false` | Print the resolved test case, agent config, model, provider, sandbox, and any overrides without executing. Combine with `--json` to emit `{testCase, testCasePath, agentConfig, model, provider, temperature, maxSteps, stepTimeoutMs, sandbox, repeat}` for scripting. |
 | `--json` | `false` | Output the run result as a single JSON object and suppress the live Ink UI. Useful for scripting and CI pipelines. |
 
 ### JSON output
@@ -258,6 +259,11 @@ agr run hello-world --repeat 5 --json | jq .solveRate
 # Save a baseline for later PR comparison
 agr run hello-world --config agent.yaml --save-baseline baselines/main.json
 agr compare-baseline --current baselines/main.json --format md --output comment.md
+
+# Inspect resolved config and overrides without executing
+agr run hello-world --dry-run
+agr run hello-world --dry-run --model claude-opus-4-8 --provider anthropic
+agr run hello-world --dry-run --json | jq .model
 ```
 
 ## `agr bench`

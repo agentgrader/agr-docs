@@ -138,6 +138,7 @@ If you are upgrading from 1.5.x, these flags and commands are new in 1.6.0:
 | list --json | `agr list --json` outputs the run list as a JSON array (fields: `id`, `testCaseId`, `testCaseName`, `agentConfigId`, `agentConfigName`, `agentModel`, `passed`, `costUsd`, `durationMs`, `stepsCount`, `tokensIn`, `tokensOut`, `error`, `matrixId`, `createdAt`, `completedAt`); suppressess plain/TUI output; combinable with `--since`, `--test-case`, `--config`, `--passed`, `--failed`, `--limit`; completes the `--json` pattern across all agr commands |
 | list --sort | `agr list --sort <field>` sorts runs by `cost`, `duration`, or `steps` (all descending); default `date` preserves the previous newest-first order; applied after all filters and `--limit`; combinable with `--plain`, `--json`, `--model`, and any other filter |
 | status --model | `agr status --model <substring>` restricts the DB summary to runs where the agent model contains the given substring (case-insensitive); completes the `--model` filter symmetry across `agr list` and `agr status`; combinable with `--by-config`, `--by-test-case`, `--since`, and `--json` |
+| run --dry-run | `agr run <name> --dry-run` prints the resolved test case, agent config, model, provider, sandbox, and any override flags without executing the run; combine with `--json` to emit a machine-readable object; mirrors `agr bench --dry-run` for single-run inspection and config validation |
 
 **Earlier additions** (1.5.x):
 
