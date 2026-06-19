@@ -140,6 +140,7 @@ If you are upgrading from 1.5.x, these flags and commands are new in 1.6.0:
 | status --model | `agr status --model <substring>` restricts the DB summary to runs where the agent model contains the given substring (case-insensitive); completes the `--model` filter symmetry across `agr list` and `agr status`; combinable with `--by-config`, `--by-test-case`, `--since`, and `--json` |
 | run --dry-run | `agr run <name> --dry-run` prints the resolved test case, agent config, model, provider, sandbox, and any override flags without executing the run; combine with `--json` to emit a machine-readable object; mirrors `agr bench --dry-run` for single-run inspection and config validation |
 | status --by-model | `agr status --by-model` shows a per-model breakdown (solve rate, avg cost, avg duration, avg tokens) sorted by solve rate; ideal for comparing haiku vs opus vs sonnet across all runs; combinable with `--since`, `--test-case`, `--config`, `--top`, and `--json` |
+| status --by-sandbox | `agr status --by-sandbox` shows a per-sandbox breakdown (solve rate, avg cost, avg duration) sorted by solve rate; useful for validating that docker vs e2b results are consistent; combinable with `--since`, `--test-case`, `--config`, and `--json` |
 
 **Earlier additions** (1.5.x):
 
