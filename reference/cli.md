@@ -988,6 +988,7 @@ Output includes:
 | `--last-matrix` | `false` | Restrict stats to runs from the most recent bench matrix sweep. Useful for inspecting the results of the last `agr bench --matrix` without filtering by date. |
 | `--trend` | `false` | Compare the `--since` window to the equal-length window before it. Requires `--since`. Shows solve-rate delta (pp), run count delta, and avg cost delta with directional arrows. |
 | `--by-day` | `false` | Show a per-day breakdown: runs, solve rate, and total cost per calendar day (UTC), sorted oldest-first. Combinable with `--since`, `--top`, and all filter flags. |
+| `--sort-by <field>` | `solve-rate` | Sort `--by-test-case`, `--by-config`, and `--by-model` breakdowns. Values: `solve-rate` (default), `cost` (avg cost/run, most expensive first), `runs` (most runs first). |
 
 The `--json` output contains: `exists`, `dbPath`, `since`, `testCase`, `config`, `model`, `passed`, `totalRuns`, `passedRuns`, `failedRuns`, `erroredRuns`, `solveRate`, `uniqueTestCases`, `uniqueConfigs`, `matrixRuns`, `totalCostUsd`, `avgCostUsd`, `avgDurationMs`, `totalTokensIn`, `totalTokensOut`, `lastRunAt`, `lastRunTestCaseId`, `lastRunAgentConfigId`. With `--by-config`, instead emits `{ exists, dbPath, since, testCase, byConfig: [{configId, total, passed, failed, solveRate, avgCostUsd, avgDurationMs, avgTokensIn, avgTokensOut}] }`.
 
