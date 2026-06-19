@@ -976,6 +976,8 @@ agr status --since 24h --trend        # compare last 24h vs previous 24h
 agr status --since 7d --trend --test-case hello-world  # trend for one task
 agr status --since 7d --by-day        # daily breakdown for the past week
 agr status --since 30d --by-day --top 7  # last 7 days of a 30-day window
+agr status --errors                   # deduplicated error breakdown across all errored runs
+agr status --errors --since 24h       # same, scoped to last 24 hours
 ```
 
 Output includes:
@@ -1010,6 +1012,7 @@ Output includes:
 | `--trend` | `false` | Compare the `--since` window to the equal-length window before it. Requires `--since`. Shows solve-rate delta (pp), run count delta, and avg cost delta with directional arrows. |
 | `--by-day` | `false` | Show a per-day breakdown: runs, solve rate, and total cost per calendar day (UTC), sorted oldest-first. Combinable with `--since`, `--top`, and all filter flags. |
 | `--sort-by <field>` | `solve-rate` | Sort `--by-test-case`, `--by-config`, and `--by-model` breakdowns. Values: `solve-rate` (default), `cost` (avg cost/run, most expensive first), `runs` (most runs first). |
+| `--errors` | `false` | Show a deduplicated list of error messages from errored/failed runs, sorted by frequency. Each entry shows count, affected test cases, and an `agr trace <runId>` link. Combinable with `--since`, `--test-case`, `--config`, and all filter flags. `--json` emits `{errors: [{message, count, exampleRunId, testCaseIds}]}`. |
 
 The `--json` output contains: `exists`, `dbPath`, `since`, `testCase`, `config`, `model`, `passed`, `totalRuns`, `passedRuns`, `failedRuns`, `erroredRuns`, `solveRate`, `uniqueTestCases`, `uniqueConfigs`, `matrixRuns`, `totalCostUsd`, `avgCostUsd`, `avgDurationMs`, `totalTokensIn`, `totalTokensOut`, `lastRunAt`, `lastRunTestCaseId`, `lastRunAgentConfigId`. With `--by-config`, instead emits `{ exists, dbPath, since, testCase, byConfig: [{configId, total, passed, failed, solveRate, avgCostUsd, avgDurationMs, avgTokensIn, avgTokensOut}] }`.
 
