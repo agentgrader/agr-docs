@@ -654,6 +654,10 @@ agr list
 | `--last-matrix` | `false` | Only show runs from the most recent bench matrix sweep. Automatically resolves the most recent `matrixId` in the database. Combinable with `--plain`, `--json`, and `--sort`. |
 | `--sandbox <provider>` | (none) | Only show runs with a matching sandbox provider (substring match, case-insensitive). E.g. `--sandbox e2b` or `--sandbox docker`. Mirrors `agr status --by-sandbox` for filter symmetry. |
 | `--error <substring>` | (none) | Only show runs whose error message contains this substring (case-insensitive). Useful for grouping runs by failure type (e.g. `--error timeout`, `--error rate limit`). |
+| `--min-cost <amount>` | (none) | Only show runs costing at least this amount in USD (e.g. `0.05`). Useful for finding expensive outlier runs. |
+| `--max-cost <amount>` | (none) | Only show runs costing at most this amount in USD. Useful for finding cheap runs or verifying cost constraints. |
+| `--min-steps <n>` | (none) | Only show runs with at least this many steps. Useful for finding runaway agents that took far more steps than expected. |
+| `--max-steps <n>` | (none) | Only show runs with at most this many steps. Useful for finding runs that terminated early or timed out before using their step budget. |
 | `--json` | `false` | Output runs as a JSON array and suppress plain-text and TUI output. Each element includes `id`, `testCaseId`, `testCaseName`, `agentConfigId`, `agentConfigName`, `agentModel`, `passed`, `costUsd`, `durationMs`, `stepsCount`, `tokensIn`, `tokensOut`, `error`, `matrixId`, `createdAt`, `completedAt`. Combinable with all filters. |
 
 ### Examples
