@@ -715,6 +715,8 @@ agr list
 | `--error <substring>` | (none) | Only show runs whose error message contains this substring (case-insensitive). Useful for grouping runs by failure type (e.g. `--error timeout`, `--error rate limit`). |
 | `--latest` | `false` | Deduplicate the run list to show only the most recent run per (test case, agent config) pair. Gives a current-state snapshot rather than full history. Combinable with `--passed`, `--failed`, `--test-case`, `--config`, `--model`, and all other filters. |
 | `--min-cost <amount>` | (none) | Only show runs costing at least this amount in USD (e.g. `0.05`). Useful for finding expensive outlier runs. |
+| `--min-duration <ms>` | (none) | Only show runs lasting at least this many milliseconds (e.g. `60000` for runs over a minute). Useful for finding slow or stalled agents. |
+| `--max-duration <ms>` | (none) | Only show runs lasting at most this many milliseconds (e.g. `5000` for very fast runs). Useful for finding agents that terminated early or timed out. |
 | `--max-cost <amount>` | (none) | Only show runs costing at most this amount in USD. Useful for finding cheap runs or verifying cost constraints. |
 | `--min-steps <n>` | (none) | Only show runs with at least this many steps. Useful for finding runaway agents that took far more steps than expected. |
 | `--max-steps <n>` | (none) | Only show runs with at most this many steps. Useful for finding runs that terminated early or timed out before using their step budget. |
