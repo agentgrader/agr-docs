@@ -329,6 +329,8 @@ agr bench --manifest bench.yaml
 | `--print-ids` | `false` | Print all completed run IDs to stdout after the bench (one per line, under a `Run IDs:` header). Enables shell pipelines like `agr bench ... --print-ids \| tail -1 \| xargs agr trace` or looping over IDs with `while read id`. |
 | `--show-failures` | `false` | After bench completes, print a compact list of failing test cases with their run IDs (as `agr trace <id>` shortcuts) and up to 80 characters of the error message. Avoids having to separately run `agr status --by-test-case --below 100`. |
 | `--config-grid` | `false` | After a multi-config bench completes, print a PASS/FAIL grid (rows: test cases, columns: agent configs) for the current bench run. Only shown when at least 2 configs were run. Gives an at-a-glance view of which tasks passed for which configs without needing `agr status --grid`. |
+| `--only-unrun` | `false` | Run only test cases with no recorded runs in the DB (no history). The natural complement to `--only-failed`; exits cleanly when all cases have runs. Useful for building initial coverage of a large suite. |
+| `--skip-passing-since <window>` | (none) | Skip test cases that have a passing run within the given time window (e.g. `24h`, `7d`). Prints how many were skipped; exits cleanly when all cases are covered. Enables incremental bench runs where only recently-failing cases need re-execution. |
 | `--model <model>` | (none) | Override the model for all agent configs in this bench run (e.g. `claude-opus-4-8`). Useful for quick model comparisons without editing YAML or creating a new agent config file. |
 | `--provider <provider>` | (none) | Override the provider for all agent configs in this bench run (e.g. `anthropic`, `openai`, `openrouter`). Combine with `--model` to switch provider and model without editing YAML. |
 | `--temperature <n>` | (none) | Override the temperature for all agent configs in this bench run (0.0-1.0). Use `--temperature 0` for deterministic reproducibility experiments. |
@@ -567,6 +569,9 @@ agr trace --last
 | `--full` | `false` | Print complete step content without the default 200-character truncation. Combinable with `--steps`, `--grep`, and all run-selection flags. |
 | `--top-cost <n>` | (all) | Show only the N most expensive steps, sorted by cost descending. The header shows `top N most expensive step(s) of M total`. Combinable with `--full`, `--grep`, `--steps`, and all run-selection flags. |
 | `--kind <type>` | (all) | Filter steps to those with an exact `kind` value (e.g. `llm_response`, `tool_call`, `tool_result`). Cleaner than `--grep` when you know the exact step type and don't want false positives from content. Combinable with `--steps`, `--grep`, `--full`, `--top-cost`, and all run-selection flags. |
+| `--min-cost <amount>` | (none) | Only show steps costing at least this many USD (e.g. `0.001`). Applied before `--top-cost`. Useful for finding expensive individual LLM calls. |
+| `--max-cost <amount>` | (none) | Only show steps costing at most this many USD. Applied before `--top-cost`. Useful for showing only free or cheap steps. |
+| `--step-count` | `false` | Print the total step count as a plain number (ignores all view/filter flags except run selection). `--json` emits `{stepCount, filteredCount, runId}`. Useful in CI for asserting step budgets. |
 
 ### Examples
 
@@ -645,7 +650,8 @@ agr count --model haiku --since 7d
 | `--model <substring>` | (none) | Only count runs where the agent model contains this substring (case-insensitive). |
 | `--sandbox <provider>` | (none) | Only count runs with this sandbox provider (substring match). |
 | `--passed` | `false` | Only count runs that passed. Mutually exclusive with `--failed`. |
-| `--failed` | `false` | Only count runs that failed. Mutually exclusive with `--passed`. |
+| `--failed` | `false` | Only count runs that failed (scored failure, `passed === false`). Mutually exclusive with `--passed`. |
+| `--errored` | `false` | Only count runs that errored (crashed before scoring, `status === "failed"` with no pass verdict). Distinct from `--failed` which counts scored failures. Mutually exclusive with `--passed` and `--failed`. |
 | `--matrix-id <id>` | (none) | Only count runs belonging to a specific bench matrix sweep. |
 | `--last-matrix` | `false` | Only count runs from the most recent bench matrix sweep. |
 | `--json` | `false` | Output as a JSON object `{total, passed, failed, dbPath}` instead of a plain number. |
@@ -1110,6 +1116,7 @@ Output includes:
 | `--above <n>` | (none) | With `--by-test-case`, `--by-config`, or `--by-model`: only show entries with solve rate strictly above n% (0-100). Complement to `--below`. `--above 80` shows consistently passing entries; `--above 0` excludes never-passing entries. Combinable with `--below` for a solve-rate range. |
 | `--by-week` | `false` | Show a per-week breakdown (runs, solve rate, total cost) labeled `YYYY-Www`, sorted oldest first. Higher-level view than `--by-day` for long-running eval suites. Combinable with `--since`, `--top`, `--test-case`, `--config`, and all filter flags. `--json` emits `{byWeek: [{week, total, passed, failed, solveRate, totalCostUsd, avgCostUsd}]}`. |
 | `--solve-rate` | `false` | Print the solve rate as a plain number (e.g. `83.3`) suitable for CI shell conditions. Combinable with all filter flags. `--json` emits `{solveRate, passedRuns, failedRuns, totalRuns, dbPath}`. |
+| `--summary` | `false` | Print a compact one-liner with all key stats, e.g. `127 runs: 89 PASS (70%) \| $1.23 total avg: $0.0097/run \| last: 2m ago`. `--json` emits `{totalRuns, passedRuns, failedRuns, solveRate, totalCostUsd, avgCostUsd, lastRunAt, dbPath}`. Combinable with all filter flags. |
 
 The `--json` output contains: `exists`, `dbPath`, `since`, `testCase`, `config`, `model`, `passed`, `totalRuns`, `passedRuns`, `failedRuns`, `erroredRuns`, `solveRate`, `uniqueTestCases`, `uniqueConfigs`, `matrixRuns`, `totalCostUsd`, `avgCostUsd`, `avgDurationMs`, `totalTokensIn`, `totalTokensOut`, `lastRunAt`, `lastRunTestCaseId`, `lastRunAgentConfigId`. With `--by-config`, instead emits `{ exists, dbPath, since, testCase, byConfig: [{configId, total, passed, failed, solveRate, avgCostUsd, avgDurationMs, avgTokensIn, avgTokensOut}] }`.
 
